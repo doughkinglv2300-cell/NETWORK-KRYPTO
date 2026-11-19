@@ -4,35 +4,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101322">
+  <meta name="theme-color" content="#0b0d14">
   <title>Network Krypto AI</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
-    <header>
-      <h1>Network Krypto AI</h1>
-      <p>Your AI coding developer</p>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="logo">K</span>
+      <strong>Network Krypto</strong>
+      <button id="close-sidebar" aria-label="Close sidebar">×</button>
+    </div>
+
+    <button id="new-chat" class="new-chat">＋ New chat</button>
+
+    <p class="section-label">YOUR CHATS</p>
+    <div id="history" class="history"></div>
+
+    <div class="sidebar-footer">
+      <span>Network Krypto AI</span>
+      <small>AI Developer · Version 2</small>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button id="menu-button" aria-label="Open menu">☰</button>
+      <strong>Network Krypto AI</strong>
+      <span class="status">● Online</span>
     </header>
 
-    <section id="chat">
-      <div class="message">
-        Hello! I'm Network Krypto AI.
-        What are we building today?
+    <section id="chat" class="chat">
+      <div class="welcome" id="welcome">
+        <div class="welcome-logo">K</div>
+        <h1>What are we building today?</h1>
+        <p>Your AI assistant and coding developer.</p>
+
+        <div class="suggestions">
+          <button data-prompt="Create a Python project">Create code</button>
+          <button data-prompt="Help me debug my code">Debug code</button>
+          <button data-prompt="Explain JavaScript">Learn programming</button>
+          <button data-prompt="Help me with my GitHub repository">GitHub help</button>
+        </div>
       </div>
     </section>
 
-    <form id="chat-form">
-      <input
-        id="user-input"
-        type="text"
-        placeholder="Ask me to code something..."
-        autocomplete="off"
-        required
-      >
-      <button type="submit">Send</button>
-    </form>
+    <footer class="composer-area">
+      <form id="chat-form" class="composer">
+        <textarea id="user-input"
+          placeholder="Message Network Krypto AI..."
+          rows="1" required></textarea>
+        <button type="submit" aria-label="Send message">↑</button>
+      </form>
+      <p>Network Krypto AI can make mistakes. Check important information.</p>
+    </footer>
   </main>
+
+  <div id="sidebar-overlay"></div>
   <script src="app.js"></script>
 </body>
 </html>
