@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -280,7 +281,16 @@ transition:.3s;
 .account{
 padding:15px 22px;border-top:1px solid var(--line);
 display:flex;justify-content:space-between;align-items:center;
-gap:12px;color:#929bb8;font-size:12px;
+flex-wrap:wrap;gap:12px;color:#929bb8;font-size:12px;
+}
+.credit-balance{
+color:#91aaff;
+font-weight:800;
+padding:9px 12px;
+background:#536cff18;
+border:1px solid #718aff40;
+border-radius:9px;
+white-space:nowrap;
 }
 .account button{
 background:#252c43;color:white;border:1px solid var(--line);
@@ -301,6 +311,7 @@ h1{letter-spacing:-2px}
 .auth-area{padding:22px}
 .panel-head{padding:18px}
 .energy{width:330px;height:330px}
+.account{padding:13px;justify-content:space-between}
 }
 @media(prefers-reduced-motion:reduce){
 *,*::before,*::after{
@@ -393,6 +404,7 @@ placeholder="Password" autocomplete="current-password" required>
 </form>
 <div class="account">
 <span id="userEmail"></span>
+<strong class="credit-balance" id="creditBalance">Credits: --</strong>
 <button id="logoutButton" type="button">Sign Out</button>
 </div>
 </div>
@@ -459,12 +471,15 @@ import {
  updateProfile
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-// Keep this URL matched to your existing Cloudflare Worker.
 const API_URL="https://network-krypto-ai.taybatouch.workers.dev/chat";
+const ACCOUNT_URL="https://network-krypto-ai.taybatouch.workers.dev/account";
+
 const $=id=>document.getElementById(id);
 let isSignup=false,busy=false;
 
-function showError(message){$("authError").textContent=message}
+function showError(message){
+ $("authError").textContent=message;
+}
 
 function setMode(signup){
  isSignup=signup;
@@ -484,22 +499,29 @@ $("switchButton").onclick=()=>setMode(!isSignup);
 $("authForm").onsubmit=async e=>{
  e.preventDefault();
  if(busy)return;
+
  busy=true;
  $("authSubmit").disabled=true;
  $("authSubmit").textContent="Please wait...";
  showError("");
+
  try{
   const email=$("email").value.trim();
   const password=$("password").value;
+
   if(isSignup){
    const credential=await createUserWithEmailAndPassword(auth,email,password);
    const name=$("name").value.trim();
-   if(name)await updateProfile(credential.user,{displayName:name});
+
+   if(name){
+    await updateProfile(credential.user,{displayName:name});
+   }
   }else{
    await signInWithEmailAndPassword(auth,email,password);
   }
- }catch(error){showError(error.message)}
- finally{
+ }catch(error){
+  showError(error.message);
+ }finally{
   busy=false;
   $("authSubmit").disabled=false;
   $("authSubmit").textContent=isSignup?"Create Account":"Sign In";
@@ -508,28 +530,84 @@ $("authForm").onsubmit=async e=>{
 
 $("googleButton").onclick=async()=>{
  showError("");
- try{await signInWithPopup(auth,googleProvider)}
- catch(error){showError(error.message)}
+ try{
+  await signInWithPopup(auth,googleProvider);
+ }catch(error){
+  showError(error.message);
+ }
 };
 
 $("forgotButton").onclick=async()=>{
  const email=$("email").value.trim();
- if(!email)return showError("Enter your email address first.");
+
+ if(!email){
+  return showError("Enter your email address first.");
+ }
+
  try{
   await sendPasswordResetEmail(auth,email);
   showError("Password reset email sent. Check your inbox.");
- }catch(error){showError(error.message)}
+ }catch(error){
+  showError(error.message);
+ }
 };
 
-onAuthStateChanged(auth,user=>{
+// LOAD FIREBASE ACCOUNT AND CREDIT BALANCE
+async function loadAccount(user){
+ $("creditBalance").textContent="Loading credits...";
+
+ try{
+  const token=await user.getIdToken();
+
+  const response=await fetch(ACCOUNT_URL,{
+   method:"GET",
+   headers:{
+    "Authorization":`Bearer ${token}`
+   }
+  });
+
+  const data=await response.json();
+
+  if(!response.ok || !data.success){
+   throw new Error(data.error||"Account loading failed");
+  }
+
+  const credits=Number(data.account?.credits);
+
+  if(!Number.isFinite(credits)){
+   throw new Error("Invalid credit balance");
+  }
+
+  $("creditBalance").textContent=`Credits: ${credits}`;
+
+ }catch(error){
+  console.error("Account error:",error);
+  $("creditBalance").textContent="Credits unavailable";
+ }
+}
+
+onAuthStateChanged(auth,async user=>{
  $("authArea").style.display=user?"none":"block";
  $("chatArea").style.display=user?"block":"none";
- if(user)$("userEmail").textContent=user.displayName||user.email||"Signed in";
+
+ if(!user){
+  $("userEmail").textContent="";
+  $("creditBalance").textContent="Credits: --";
+  return;
+ }
+
+ $("userEmail").textContent=
+  user.displayName||user.email||"Signed in";
+
+ await loadAccount(user);
 });
 
 $("logoutButton").onclick=async()=>{
- try{await signOut(auth)}
- catch(error){alert(error.message)}
+ try{
+  await signOut(auth);
+ }catch(error){
+  alert(error.message);
+ }
 };
 
 function addMessage(text,type){
@@ -541,11 +619,15 @@ function addMessage(text,type){
  return el;
 }
 
+// EXISTING KODARI AI CHAT CONNECTION
 $("chatForm").onsubmit=async e=>{
  e.preventDefault();
+
  const input=$("chatInput");
  const text=input.value.trim();
+
  if(!text)return;
+
  input.value="";
  addMessage(text,"user");
 
@@ -559,14 +641,27 @@ $("chatForm").onsubmit=async e=>{
    headers:{"Content-Type":"application/json"},
    body:JSON.stringify({message:text})
   });
+
   const raw=await response.text();
-  if(!response.ok)throw Error("Server error "+response.status+": "+raw.slice(0,200));
+
+  if(!response.ok){
+   throw Error("Server error "+response.status+": "+raw.slice(0,200));
+  }
+
   let data;
-  try{data=JSON.parse(raw)}catch{data=raw}
+
+  try{
+   data=JSON.parse(raw);
+  }catch{
+   data=raw;
+  }
+
   let result=typeof data==="string"?data:
    data.result||data.response||data.output||data.text||data.message||JSON.stringify(data);
+
   loading.classList.remove("typing");
   loading.textContent=result;
+
  }catch(error){
   loading.classList.remove("typing");
   loading.textContent="Connection error: "+error.message;
@@ -574,4 +669,5 @@ $("chatForm").onsubmit=async e=>{
 };
 </script>
 </body>
-</html>
+ </html>
+                                                    
