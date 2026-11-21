@@ -2,65 +2,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0d14">
-  <title>Network Krypto AI</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Krypto AI</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #080812;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #29243d;
+}
+
+.logo {
+  color: #a78bfa;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+button {
+  background: #7545df;
+  color: white;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+button:hover { background: #956bff; }
+
+.hero {
+  text-align: center;
+  padding: 65px 15px;
+}
+
+.hero h1 { font-size: 38px; }
+.hero span { color: #a78bfa; }
+.hero p { color: #aaa; }
+
+.panel {
+  max-width: 390px;
+  margin: 20px auto;
+  padding: 25px;
+  background: #141424;
+  border: 1px solid #493477;
+  border-radius: 14px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  background: #090916;
+  color: white;
+  border: 1px solid #39305e;
+  border-radius: 8px;
+}
+
+#dashboard { display: none; }
+#message { overflow-wrap: anywhere; color: #c4b5fd; }
+footer { text-align: center; padding: 30px; color: #777; }
+</style>
 </head>
+
 <body>
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <span class="logo">K</span>
-      <strong>Network Krypto</strong>
-      <button id="close-sidebar" aria-label="Close sidebar">×</button>
-    </div>
 
-    <button id="new-chat" class="new-chat">＋ New chat</button>
+<header>
+  <div class="logo">NETWORK KRYPTO AI</div>
+  <button onclick="showAuth()">Sign In</button>
+</header>
 
-    <p class="section-label">YOUR CHATS</p>
-    <div id="history" class="history"></div>
+<section class="hero">
+  <h1>Meet <span>Network Krypto AI</span></h1>
+  <p>Your AI assistant for coding, Minecraft and Discord.</p>
+  <button onclick="showAuth()">Get Started</button>
+</section>
 
-    <div class="sidebar-footer">
-      <span>Network Krypto AI</span>
-      <small>AI Developer · Version 2</small>
-    </div>
-  </aside>
+<div class="panel" id="auth">
+  <h2>Welcome to Krypto</h2>
 
-  <main class="main">
-    <header class="topbar">
-      <button id="menu-button" aria-label="Open menu">☰</button>
-      <strong>Network Krypto AI</strong>
-      <span class="status">● Online</span>
-    </header>
+  <input id="email" type="email" placeholder="Email address">
+  <input id="password" type="password" placeholder="Password">
 
-    <section id="chat" class="chat">
-      <div class="welcome" id="welcome">
-        <div class="welcome-logo">K</div>
-        <h1>What are we building today?</h1>
-        <p>Your AI assistant and coding developer.</p>
+  <button onclick="login()">Login</button>
+  <button onclick="register()">Create Account</button>
+  <button onclick="googleLogin()">Google Login</button>
 
-        <div class="suggestions">
-          <button data-prompt="Create a Python project">Create code</button>
-          <button data-prompt="Help me debug my code">Debug code</button>
-          <button data-prompt="Explain JavaScript">Learn programming</button>
-          <button data-prompt="Help me with my GitHub repository">GitHub help</button>
-        </div>
-      </div>
-    </section>
+  <p id="message"></p>
+</div>
 
-    <footer class="composer-area">
-      <form id="chat-form" class="composer">
-        <textarea id="user-input"
-          placeholder="Message Network Krypto AI..."
-          rows="1" required></textarea>
-        <button type="submit" aria-label="Send message">↑</button>
-      </form>
-      <p>Network Krypto AI can make mistakes. Check important information.</p>
-    </footer>
-  </main>
+<div class="panel" id="dashboard">
+  <h2>Welcome to Network Krypto AI!</h2>
+  <p id="userEmail"></p>
+  <button onclick="logout()">Logout</button>
+</div>
 
-  <div id="sidebar-overlay"></div>
-  <script src="app.js"></script>
+<footer>
+  Network Krypto AI © 2026
+</footer>
+
+<script type="module">
+import { auth, googleProvider } from "./firebase.js";
+
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const message = document.getElementById("message");
+
+window.login = async () => {
+  try {
+    await signInWithEmailAndPassword(
+      auth, email.value, password.value
+    );
+    message.textContent = "Login successful!";
+  } catch (error) {
+    message.textContent = error.message;
+  }
+};
+
+window.register = async () => {
+  try {
+    await createUserWithEmailAndPassword(
+      auth, email.value, password.value
+    );
+    message.textContent = "Account created!";
+  } catch (error) {
+    message.textContent = error.message;
+  }
+};
+
+window.googleLogin = async () => {
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch (error) {
+    message.textContent = error.message;
+  }
+};
+
+window.logout = async () => {
+  await signOut(auth);
+};
+
+window.showAuth = () => {
+  document.getElementById("auth").scrollIntoView({
+    behavior: "smooth"
+  });
+};
+
+onAuthStateChanged(auth, user => {
+  document.getElementById("auth").style.display =
+    user ? "none" : "block";
+
+  document.getElementById("dashboard").style.display =
+    user ? "block" : "none";
+
+  if (user) {
+    document.getElementById("userEmail").textContent =
+      user.email || "Google user";
+  }
+});
+</script>
+
 </body>
 </html>
