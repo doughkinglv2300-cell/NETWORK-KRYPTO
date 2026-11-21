@@ -7,179 +7,247 @@
 <title>Network Krypto AI</title>
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: #080812;
-  color: white;
-  font-family: Arial, sans-serif;
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080914;color:#fff;
+ font-family:Arial,sans-serif;min-height:100vh;
 }
-
-header {
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #29243d;
+header{
+ padding:20px 7%;display:flex;justify-content:space-between;
+ align-items:center;border-bottom:1px solid #292943;
 }
-
-.logo {
-  color: #a78bfa;
-  font-weight: bold;
-  font-size: 20px;
+.logo{font-size:21px;font-weight:bold;color:#a78bfa}
+.container{max-width:1100px;margin:65px auto;padding:20px}
+.card{
+ max-width:440px;margin:auto;background:#131426;
+ border:1px solid #343052;border-radius:18px;padding:28px;
+ box-shadow:0 15px 60px #0008;
 }
-
-button {
-  background: #7545df;
-  color: white;
-  padding: 12px 18px;
-  border: 0;
-  border-radius: 8px;
-  margin: 5px;
-  cursor: pointer;
+h1,h2{text-align:center}
+.subtitle{text-align:center;color:#aaa;font-size:14px}
+input{
+ width:100%;padding:14px;margin:9px 0;
+ background:#090b19;border:1px solid #393753;
+ border-radius:9px;color:white;outline:none;
 }
-
-button:hover { background: #956bff; }
-
-.hero {
-  text-align: center;
-  padding: 65px 15px;
+input:focus{border-color:#a78bfa}
+button{
+ padding:13px 16px;border:0;border-radius:9px;
+ background:#7545df;color:white;font-weight:bold;
+ cursor:pointer;margin-top:9px;
 }
-
-.hero h1 { font-size: 38px; }
-.hero span { color: #a78bfa; }
-.hero p { color: #aaa; }
-
-.panel {
-  max-width: 390px;
-  margin: 20px auto;
-  padding: 25px;
-  background: #141424;
-  border: 1px solid #493477;
-  border-radius: 14px;
-  text-align: center;
+button:hover{background:#9369f5}
+.full{width:100%}
+.google{background:#292943}
+.tabs{display:flex;gap:8px;margin:22px 0}
+.tabs button{flex:1;background:#292943}
+.tabs button.active{background:#7545df}
+.hidden{display:none!important}
+.message{text-align:center;font-size:13px;color:#c4b5fd;overflow-wrap:anywhere}
+.dashboard{max-width:850px}
+.profile{
+ padding:20px;background:#1b1b31;
+ border-radius:12px;margin:15px 0;
 }
-
-input {
-  width: 100%;
-  padding: 13px;
-  margin: 8px 0;
-  background: #090916;
-  color: white;
-  border: 1px solid #39305e;
-  border-radius: 8px;
+.avatar{
+ width:65px;height:65px;border-radius:50%;
+ background:#7545df;display:grid;place-items:center;
+ font-size:27px;margin:auto;
 }
-
-#dashboard { display: none; }
-#message { overflow-wrap: anywhere; color: #c4b5fd; }
-footer { text-align: center; padding: 30px; color: #777; }
+.feature{
+ background:#1b1b31;padding:18px;border-radius:12px;
+ margin:10px 0;
+}
+footer{text-align:center;color:#777;padding:35px}
+a{color:#b9a0ff;cursor:pointer}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">NETWORK KRYPTO AI</div>
-  <button onclick="showAuth()">Sign In</button>
+ <div class="logo">NETWORK KRYPTO AI</div>
+ <span id="headerStatus">AI ACCOUNT SYSTEM</span>
 </header>
 
-<section class="hero">
-  <h1>Meet <span>Network Krypto AI</span></h1>
-  <p>Your AI assistant for coding, Minecraft and Discord.</p>
-  <button onclick="showAuth()">Get Started</button>
+<main class="container">
+
+<section class="card" id="authCard">
+ <h1>Welcome to Krypto</h1>
+ <p class="subtitle">Your AI workspace starts here.</p>
+
+ <div class="tabs">
+  <button id="loginTab" class="active">Login</button>
+  <button id="registerTab">Register</button>
+ </div>
+
+ <form id="loginForm">
+  <input id="loginEmail" type="email" placeholder="Email address" required>
+  <input id="loginPassword" type="password" placeholder="Password" required>
+  <button class="full" type="submit">Sign In</button>
+  <p class="subtitle"><a id="forgot">Forgot password?</a></p>
+ </form>
+
+ <form id="registerForm" class="hidden">
+  <input id="username" type="text" placeholder="Username" minlength="3" maxlength="24" required>
+  <input id="registerEmail" type="email" placeholder="Email address" required>
+  <input id="registerPassword" type="password" placeholder="Password (6+ characters)" minlength="6" required>
+  <button class="full" type="submit">Create Account</button>
+ </form>
+
+ <button class="full google" id="googleButton">Continue with Google</button>
+ <p id="message" class="message"></p>
 </section>
 
-<div class="panel" id="auth">
-  <h2>Welcome to Krypto</h2>
+<section class="card dashboard hidden" id="dashboard">
+ <div class="avatar" id="avatar">K</div>
+ <h2 id="welcome">Welcome!</h2>
+ <p class="subtitle" id="profileEmail"></p>
 
-  <input id="email" type="email" placeholder="Email address">
-  <input id="password" type="password" placeholder="Password">
+ <div class="profile">
+  <h3>Account Information</h3>
+  <p>Username: <span id="profileName">User</span></p>
+  <p>Account: <span id="verifiedStatus">Checking...</span></p>
+ </div>
 
-  <button onclick="login()">Login</button>
-  <button onclick="register()">Create Account</button>
-  <button onclick="googleLogin()">Google Login</button>
+ <div class="feature">
+  <h3>🤖 Network Krypto AI</h3>
+  <p>Your AI workspace is ready for the next upgrade.</p>
+  <p class="subtitle">AI engine connection is a separate next step.</p>
+ </div>
 
-  <p id="message"></p>
-</div>
+ <button class="full" id="verifyButton">Send verification email</button>
+ <button class="full google" id="logoutButton">Logout</button>
+ <p id="dashboardMessage" class="message"></p>
+</section>
 
-<div class="panel" id="dashboard">
-  <h2>Welcome to Network Krypto AI!</h2>
-  <p id="userEmail"></p>
-  <button onclick="logout()">Logout</button>
-</div>
+</main>
 
-<footer>
-  Network Krypto AI © 2026
-</footer>
+<footer>Network Krypto AI © 2026</footer>
 
 <script type="module">
-import { auth, googleProvider } from "./firebase.js";
+import {auth, googleProvider} from "./firebase.js";
 
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ signInWithPopup,
+ sendPasswordResetEmail,
+ sendEmailVerification,
+ onAuthStateChanged,
+ signOut,
+ updateProfile
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const message = document.getElementById("message");
+const $ = id => document.getElementById(id);
 
-window.login = async () => {
-  try {
-    await signInWithEmailAndPassword(
-      auth, email.value, password.value
-    );
-    message.textContent = "Login successful!";
-  } catch (error) {
-    message.textContent = error.message;
-  }
+function showMessage(text){
+ $("message").textContent=text;
+}
+
+function showTab(tab){
+ const register=tab==="register";
+ $("loginForm").classList.toggle("hidden",register);
+ $("registerForm").classList.toggle("hidden",!register);
+ $("loginTab").classList.toggle("active",!register);
+ $("registerTab").classList.toggle("active",register);
+ showMessage("");
+}
+
+$("loginTab").onclick=()=>showTab("login");
+$("registerTab").onclick=()=>showTab("register");
+
+$("loginForm").onsubmit=async e=>{
+ e.preventDefault();
+ showMessage("Signing in...");
+ try{
+  await signInWithEmailAndPassword(
+   auth,$("loginEmail").value.trim(),
+   $("loginPassword").value
+  );
+  showMessage("Login successful!");
+ }catch(error){
+  showMessage(error.message);
+ }
 };
 
-window.register = async () => {
-  try {
-    await createUserWithEmailAndPassword(
-      auth, email.value, password.value
-    );
-    message.textContent = "Account created!";
-  } catch (error) {
-    message.textContent = error.message;
-  }
+$("registerForm").onsubmit=async e=>{
+ e.preventDefault();
+ showMessage("Creating your account...");
+ try{
+  const name=$("username").value.trim();
+  const credential=await createUserWithEmailAndPassword(
+   auth,$("registerEmail").value.trim(),
+   $("registerPassword").value
+  );
+  await updateProfile(credential.user,{displayName:name});
+  await sendEmailVerification(credential.user);
+  showMessage("Account created! Verification email sent.");
+ }catch(error){
+  showMessage(error.message);
+ }
 };
 
-window.googleLogin = async () => {
-  try {
-    await signInWithPopup(auth, googleProvider);
-  } catch (error) {
-    message.textContent = error.message;
-  }
+$("googleButton").onclick=async()=>{
+ showMessage("Opening Google sign-in...");
+ try{
+  await signInWithPopup(auth,googleProvider);
+ }catch(error){
+  showMessage(error.message);
+ }
 };
 
-window.logout = async () => {
+$("forgot").onclick=async()=>{
+ const email=$("loginEmail").value.trim();
+ if(!email){
+  showMessage("Enter your email address first.");
+  return;
+ }
+ try{
+  await sendPasswordResetEmail(auth,email);
+  showMessage("Password reset email sent!");
+ }catch(error){
+  showMessage(error.message);
+ }
+};
+
+$("verifyButton").onclick=async()=>{
+ if(!auth.currentUser)return;
+ try{
+  await sendEmailVerification(auth.currentUser);
+  $("dashboardMessage").textContent="Verification email sent!";
+ }catch(error){
+  $("dashboardMessage").textContent=error.message;
+ }
+};
+
+$("logoutButton").onclick=async()=>{
+ try{
   await signOut(auth);
+ }catch(error){
+  $("dashboardMessage").textContent=error.message;
+ }
 };
 
-window.showAuth = () => {
-  document.getElementById("auth").scrollIntoView({
-    behavior: "smooth"
-  });
-};
+onAuthStateChanged(auth,user=>{
+ $("authCard").classList.toggle("hidden",!!user);
+ $("dashboard").classList.toggle("hidden",!user);
 
-onAuthStateChanged(auth, user => {
-  document.getElementById("auth").style.display =
-    user ? "none" : "block";
-
-  document.getElementById("dashboard").style.display =
-    user ? "block" : "none";
-
-  if (user) {
-    document.getElementById("userEmail").textContent =
-      user.email || "Google user";
-  }
+ if(user){
+  const name=user.displayName||"Krypto User";
+  $("welcome").textContent="Welcome, "+name+"!";
+  $("profileName").textContent=name;
+  $("profileEmail").textContent=user.email||"";
+  $("avatar").textContent=name.charAt(0).toUpperCase();
+  $("verifiedStatus").textContent=
+   user.emailVerified?"Verified":"Not verified";
+  $("headerStatus").textContent="ACCOUNT ACTIVE";
+ }else{
+  $("headerStatus").textContent="AI ACCOUNT SYSTEM";
+ }
 });
 </script>
 
 </body>
-</html>
+  </html>
+  
