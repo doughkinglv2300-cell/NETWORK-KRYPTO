@@ -4,470 +4,726 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070914">
 <title>Network Krypto AI</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#090a14;color:#fff;
- font-family:Arial,sans-serif;
+:root {
+  --bg: #070914;
+  --panel: rgba(18,23,43,.78);
+  --line: rgba(135,155,255,.17);
+  --blue: #5487ff;
+  --purple: #a16aff;
+  --text: #f4f6ff;
+  --muted: #929bb8;
 }
-button,input{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
 
-#authScreen{
- min-height:100vh;display:grid;place-items:center;padding:20px;
-}
-.auth-card{
- width:100%;max-width:420px;padding:30px;
- background:#151528;border:1px solid #343052;
- border-radius:18px;
-}
-.logo{color:#a78bfa;font-size:23px;font-weight:bold}
-.auth-card h1{text-align:center}
-.auth-card p{text-align:center;color:#aaa}
-.auth-card input{
- width:100%;padding:14px;margin:8px 0;
- background:#090a17;color:white;
- border:1px solid #393753;border-radius:9px;
-}
-.btn{
- border:0;border-radius:9px;padding:13px 16px;
- background:#7545df;color:white;font-weight:bold;
-}
-.btn:hover{background:#9369f5}
-.full{width:100%;margin-top:10px}
-.secondary{background:#292943}
-.tabs{display:flex;gap:8px;margin:20px 0}
-.tabs button{flex:1}
-.tabs .active{background:#7545df}
-#authMessage{color:#c4b5fd;overflow-wrap:anywhere}
+* { box-sizing:border-box; }
 
-#app{
- height:100dvh;display:flex;overflow:hidden;
+body {
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,sans-serif;
+  overflow-x:hidden;
 }
-.sidebar{
- width:260px;background:#10111e;
- border-right:1px solid #292943;
- padding:17px;display:flex;flex-direction:column;
-}
-.sidebar-top{display:flex;justify-content:space-between;align-items:center}
-.new-chat{
- width:100%;margin:20px 0 12px;
- padding:12px;background:#282441;color:white;
- border:1px solid #514078;border-radius:9px;
-}
-.history-title{color:#888;font-size:12px;margin:15px 0}
-#history{overflow-y:auto;flex:1}
-.history-item{
- padding:11px;border-radius:8px;color:#ddd;
- cursor:pointer;overflow:hidden;text-overflow:ellipsis;
- white-space:nowrap;font-size:13px;
-}
-.history-item:hover{background:#292943}
-.user-box{
- padding:13px 5px;border-top:1px solid #292943;
- font-size:13px;overflow-wrap:anywhere;
-}
-.user-box button{margin-top:10px}
 
-.main{
- flex:1;display:flex;flex-direction:column;
- min-width:0;
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 15% 15%,rgba(64,91,255,.19),transparent 40%),
+    radial-gradient(ellipse at 85% 75%,rgba(145,63,255,.15),transparent 40%);
+  z-index:-2;
 }
-.topbar{
- height:65px;display:flex;align-items:center;
- justify-content:space-between;padding:0 20px;
- border-bottom:1px solid #292943;
-}
-.topbar strong{color:#c4b5fd}
-.chat{
- flex:1;overflow-y:auto;padding:25px 16px;
-}
-.welcome{
- text-align:center;margin:12vh auto 30px;
- max-width:600px;
-}
-.welcome h1{font-size:34px}
-.welcome span{color:#a78bfa}
-.welcome p{color:#999}
-.messages{max-width:800px;margin:auto}
-.message{
- padding:15px 17px;margin:14px 0;
- border-radius:13px;line-height:1.6;
- white-space:pre-wrap;overflow-wrap:anywhere;
-}
-.user-message{background:#292344;margin-left:10%}
-.ai-message{background:#171827;margin-right:10%}
-.message-label{
- font-size:11px;color:#b9a0ff;
- margin-bottom:7px;font-weight:bold;
-}
-.composer-area{padding:15px 16px 22px}
-.composer{
- max-width:800px;margin:auto;display:flex;gap:9px;
- padding:10px;background:#171827;
- border:1px solid #393753;border-radius:14px;
-}
-.composer textarea{
- flex:1;resize:none;min-height:42px;max-height:130px;
- background:transparent;border:0;outline:none;
- color:white;padding:10px;
-}
-.composer button{align-self:flex-end}
-.hint{text-align:center;color:#777;font-size:11px;margin-top:9px}
-#status{font-size:12px;color:#b9a0ff}
-#menuButton{display:none}
 
-@media(max-width:700px){
- .sidebar{
-  position:fixed;z-index:5;top:0;bottom:0;left:0;
-  transform:translateX(-105%);transition:.2s;
- }
- .sidebar.open{transform:translateX(0)}
- #menuButton{display:block}
- .welcome h1{font-size:27px}
- .user-message{margin-left:3%}
- .ai-message{margin-right:3%}
+.stars {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.45;
+  background-image:radial-gradient(#a9baff 1px,transparent 1px);
+  background-size:65px 65px;
+  animation:stars 30s linear infinite;
+  z-index:-1;
+}
+
+@keyframes stars {
+  to { background-position:130px 130px; }
+}
+
+button,input { font:inherit; }
+
+button { cursor:pointer; }
+
+header {
+  height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 6%;
+  border-bottom:1px solid var(--line);
+  background:rgba(7,9,20,.75);
+  backdrop-filter:blur(18px);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  font-weight:900;
+  letter-spacing:-.6px;
+}
+
+.planet {
+  width:48px;
+  height:48px;
+  position:relative;
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+  animation:planetFloat 4s ease-in-out infinite;
+}
+
+.planet-core {
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#c5d8ff,#507dff 35%,#151b48 75%);
+  box-shadow:0 0 18px #5487ff, inset -5px -5px 12px #080d2c;
+  position:relative;
+}
+
+.planet-core::before {
+  content:"";
+  position:absolute;
+  width:7px;
+  height:7px;
+  background:#a7f5ff;
+  border-radius:50%;
+  top:10px;
+  left:9px;
+  box-shadow:10px 7px 0 #a7f5ff;
+}
+
+.planet-ring {
+  position:absolute;
+  width:49px;
+  height:17px;
+  border:2px solid #a77aff;
+  border-radius:50%;
+  transform:rotate(-25deg);
+  box-shadow:0 0 9px #895cff;
+  animation:ring 5s linear infinite;
+}
+
+@keyframes ring {
+  to { transform:rotate(335deg); }
+}
+
+@keyframes planetFloat {
+  50% { transform:translateY(-5px); }
+}
+
+.brand-name span { color:#8a9fff; }
+
+.status {
+  font-size:11px;
+  color:#8cf5bb;
+  border:1px solid rgba(100,255,170,.2);
+  padding:7px 11px;
+  border-radius:30px;
+}
+
+main {
+  max-width:1150px;
+  margin:auto;
+  padding:75px 22px;
+}
+
+.hero {
+  text-align:center;
+  animation:appear .9s ease both;
+}
+
+@keyframes appear {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.eyebrow {
+  color:#9baeff;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:3px;
+}
+
+h1 {
+  font-size:clamp(38px,7vw,75px);
+  line-height:1.08;
+  letter-spacing:-4px;
+  margin:23px 0;
+}
+
+.gradient {
+  background:linear-gradient(100deg,#fff,#83a7ff,#b78aff);
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p {
+  color:var(--muted);
+  line-height:1.8;
+  max-width:600px;
+  margin:0 auto;
+}
+
+.features {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin:65px 0;
+}
+
+.feature {
+  padding:23px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:17px;
+  transition:.35s;
+}
+
+.feature:hover {
+  transform:translateY(-7px);
+  border-color:#7896ff;
+  box-shadow:0 15px 40px #354aff20;
+}
+
+.feature-icon {
+  font-size:25px;
+  margin-bottom:15px;
+}
+
+.feature h3 { font-size:15px; }
+
+.feature p {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+
+.panel {
+  max-width:780px;
+  margin:50px auto;
+  border:1px solid var(--line);
+  background:var(--panel);
+  backdrop-filter:blur(22px);
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 25px 90px #0005;
+}
+
+.panel-head {
+  padding:23px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.panel-head h2 { margin:0; font-size:17px; }
+
+.panel-head small {
+  color:#8cf5bb;
+  font-size:11px;
+}
+
+.auth-area {
+  padding:28px;
+  max-width:470px;
+  margin:auto;
+}
+
+.auth-area h2 { font-size:25px; }
+
+.auth-area p {
+  color:var(--muted);
+  font-size:13px;
+}
+
+.field {
+  width:100%;
+  padding:15px;
+  border-radius:11px;
+  border:1px solid var(--line);
+  background:#090d1d;
+  color:white;
+  outline:none;
+  margin:9px 0;
+  transition:.2s;
+}
+
+.field:focus {
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px #5487ff20;
+}
+
+.primary,.secondary {
+  width:100%;
+  padding:15px;
+  border-radius:11px;
+  border:0;
+  font-weight:800;
+  margin-top:12px;
+  transition:.25s;
+}
+
+.primary {
+  color:white;
+  background:linear-gradient(100deg,#426fff,#9561ff);
+  box-shadow:0 7px 25px #665eff30;
+}
+
+.primary:hover {
+  transform:translateY(-2px);
+  filter:brightness(1.15);
+}
+
+.secondary {
+  color:white;
+  background:#20263a;
+  border:1px solid var(--line);
+}
+
+.switch {
+  color:#a5b9ff;
+  background:none;
+  border:0;
+  padding:12px 0;
+}
+
+.error {
+  color:#ff8585;
+  font-size:12px;
+  min-height:18px;
+}
+
+#chatArea { display:none; }
+
+.chat-messages {
+  padding:22px;
+  min-height:260px;
+  max-height:420px;
+  overflow-y:auto;
+}
+
+.message {
+  max-width:85%;
+  padding:14px 16px;
+  border-radius:14px;
+  margin:12px 0;
+  font-size:13px;
+  line-height:1.7;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.bot {
+  background:#202741;
+  border:1px solid var(--line);
+}
+
+.user {
+  background:linear-gradient(100deg,#385fca,#754bc0);
+  margin-left:auto;
+}
+
+.chat-input {
+  padding:17px;
+  border-top:1px solid var(--line);
+  display:flex;
+  gap:10px;
+}
+
+.chat-input input {
+  flex:1;
+  min-width:0;
+  margin:0;
+}
+
+.send {
+  width:52px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(120deg,#477dff,#9561ff);
+  color:white;
+  font-size:20px;
+}
+
+.account {
+  padding:15px 22px;
+  border-top:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.account button {
+  background:#252c43;
+  color:white;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:9px 13px;
+}
+
+footer {
+  text-align:center;
+  padding:30px;
+  color:#68728f;
+  font-size:11px;
+  border-top:1px solid var(--line);
+}
+
+@media (min-width:1000px) {
+  .feature { animation:appear .8s ease both; }
+  .feature:nth-child(2) { animation-delay:.15s; }
+  .feature:nth-child(3) { animation-delay:.3s; }
+  .panel { transition:transform .4s,box-shadow .4s; }
+  .panel:hover { box-shadow:0 30px 100px #4d54ff18; }
+}
+
+@media (max-width:650px) {
+  header { padding:0 17px; height:66px; }
+  .planet { transform:scale(.85); }
+  .brand { gap:7px; font-size:13px; }
+  main { padding:55px 15px; }
+  h1 { letter-spacing:-2px; }
+  .features { grid-template-columns:1fr; margin:40px 0; }
+  .feature { padding:19px; }
+  .auth-area { padding:20px; }
+  .panel-head { padding:18px; }
+  .chat-messages { min-height:220px; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+  }
 }
 </style>
 </head>
 
 <body>
+<div class="stars"></div>
 
-<section id="authScreen">
- <div class="auth-card">
-  <div class="logo">NETWORK KRYPTO AI</div>
-  <h1 id="authTitle">Welcome Back</h1>
-  <p>Your intelligent AI workspace.</p>
-
-  <div class="tabs">
-   <button class="btn active" id="loginTab">Login</button>
-   <button class="btn secondary" id="registerTab">Register</button>
+<header>
+  <div class="brand">
+    <div class="planet">
+      <div class="planet-core"></div>
+      <div class="planet-ring"></div>
+    </div>
+    <div class="brand-name">NETWORK <span>KRYPTO AI</span></div>
   </div>
+  <div class="status">● SYSTEM ONLINE</div>
+</header>
 
-  <form id="loginForm">
-   <input id="loginEmail" type="email" placeholder="Email address" required>
-   <input id="loginPassword" type="password" placeholder="Password" required>
-   <button class="btn full">Sign In</button>
-   <p><a href="#" id="forgot">Forgot password?</a></p>
-  </form>
-
-  <form id="registerForm" class="hidden">
-   <input id="registerName" placeholder="Username" minlength="3" maxlength="24" required>
-   <input id="registerEmail" type="email" placeholder="Email address" required>
-   <input id="registerPassword" type="password" placeholder="Password (6+ characters)" minlength="6" required>
-   <button class="btn full">Create Account</button>
-  </form>
-
-  <button class="btn secondary full" id="googleButton">Continue with Google</button>
-  <p id="authMessage"></p>
- </div>
-</section>
-
-<section id="app" class="hidden">
-
- <aside class="sidebar" id="sidebar">
-  <div class="sidebar-top">
-   <div class="logo">KRYPTO AI</div>
-   <button class="btn secondary" id="closeSidebar">×</button>
-  </div>
-
-  <button class="new-chat" id="newChat">＋ New Chat</button>
-
-  <div class="history-title">YOUR CONVERSATIONS</div>
-  <div id="history"></div>
-
-  <div class="user-box">
-   <div id="userName">User</div>
-   <div id="userEmail"></div>
-   <button class="btn secondary full" id="logoutButton">Logout</button>
-  </div>
- </aside>
-
- <main class="main">
-  <header class="topbar">
-   <div>
-    <button class="btn secondary" id="menuButton">☰</button>
-    <strong>Network Krypto AI</strong>
-   </div>
-   <span id="status">● Ready</span>
-  </header>
-
-  <section class="chat" id="chat">
-   <div class="welcome" id="welcome">
-    <h1>Welcome to <span>Network Krypto AI</span></h1>
-    <p>Your coding, Minecraft and Discord development assistant.</p>
-   </div>
-   <div class="messages" id="messages"></div>
+<main>
+  <section class="hero">
+    <div class="eyebrow">NEXT GENERATION INTELLIGENCE</div>
+    <h1>Beyond Limits.<br><span class="gradient">Beyond Basic.</span></h1>
+    <p>
+      Meet Network Krypto AI — your intelligent assistant for
+      development, Minecraft, Discord bots and creative technology.
+    </p>
   </section>
 
-  <div class="composer-area">
-   <div class="composer">
-    <textarea id="prompt" rows="1"
-     placeholder="Message Network Krypto AI..."></textarea>
-    <button class="btn" id="sendButton">Send ➤</button>
-   </div>
-   <div class="hint">Network Krypto AI · Powered by Kodari</div>
-  </div>
- </main>
-</section>
+  <section class="features">
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Advanced Intelligence</h3>
+      <p>Get help with coding, debugging and technical challenges.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌌</div>
+      <h3>Creative Technology</h3>
+      <p>Explore ideas and build projects with AI assistance.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🛡️</div>
+      <h3>Developer Focused</h3>
+      <p>Tools and guidance for your development journey.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>◈ Network Krypto AI</h2>
+      <small>● Connected interface</small>
+    </div>
+
+    <div id="authArea" class="auth-area">
+      <h2 id="authTitle">Welcome Back</h2>
+      <p id="authDescription">Sign in to access your AI assistant.</p>
+
+      <form id="authForm">
+        <input class="field" id="name" placeholder="Your name"
+          autocomplete="name" style="display:none">
+
+        <input class="field" id="email" type="email"
+          placeholder="Email address" autocomplete="email" required>
+
+        <input class="field" id="password" type="password"
+          placeholder="Password" autocomplete="current-password" required>
+
+        <button class="primary" id="authSubmit" type="submit">Sign In</button>
+      </form>
+
+      <button class="secondary" id="googleButton" type="button">
+        Continue with Google
+      </button>
+
+      <button class="switch" id="forgotButton" type="button">
+        Forgot password?
+      </button>
+
+      <p id="authError" class="error"></p>
+
+      <button class="switch" id="switchButton" type="button">
+        Create an account
+      </button>
+    </div>
+
+    <div id="chatArea">
+      <div class="chat-messages" id="messages">
+        <div class="message bot">
+          Hello! I'm Network Krypto AI. What are we building today?
+        </div>
+      </div>
+
+      <form class="chat-input" id="chatForm">
+        <input class="field" id="chatInput"
+          placeholder="Ask Network Krypto AI..."
+          autocomplete="off" required>
+        <button class="send" type="submit">➤</button>
+      </form>
+
+      <div class="account">
+        <span id="userEmail"></span>
+        <button id="logoutButton" type="button">Sign Out</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  NETWORK KRYPTO AI © 2026 · DEVELOPED BY KODARI
+</footer>
 
 <script type="module">
-import {auth,googleProvider} from "./firebase.js";
+import { auth, googleProvider } from "./firebase.js";
 
 import {
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- signInWithPopup,
- sendPasswordResetEmail,
- onAuthStateChanged,
- signOut,
- updateProfile
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-// Existing Cloudflare Worker
-const API_URL =
- "https://network-krypto-ai.taybatouch.workers.dev/chat";
+// EXISTING CLOUDFLARE WORKER
+const API_URL = "https://network-krypto-ai.taybatouch.workers.dev/chat";
 
 const $ = id => document.getElementById(id);
 
-let conversations = [];
-let activeChat = null;
-let sending = false;
+let isSignup = false;
+let busy = false;
 
-function authMessage(text){
- $("authMessage").textContent=text;
+function showError(message) {
+  $("authError").textContent = message;
 }
 
-function showTab(register){
- $("loginForm").classList.toggle("hidden",register);
- $("registerForm").classList.toggle("hidden",!register);
- $("loginTab").classList.toggle("active",!register);
- $("registerTab").classList.toggle("active",register);
- $("authTitle").textContent=register?"Create Account":"Welcome Back";
- authMessage("");
+function setAuthMode(signup) {
+  isSignup = signup;
+  $("authTitle").textContent = signup ? "Create Account" : "Welcome Back";
+  $("authDescription").textContent = signup
+    ? "Join Network Krypto AI."
+    : "Sign in to access your AI assistant.";
+
+  $("name").style.display = signup ? "block" : "none";
+  $("name").required = signup;
+  $("password").autocomplete = signup ? "new-password" : "current-password";
+  $("authSubmit").textContent = signup ? "Create Account" : "Sign In";
+  $("switchButton").textContent = signup
+    ? "Already have an account? Sign in"
+    : "Create an account";
+
+  $("forgotButton").style.display = signup ? "none" : "block";
+  showError("");
 }
 
-$("loginTab").onclick=()=>showTab(false);
-$("registerTab").onclick=()=>showTab(true);
+$("switchButton").addEventListener("click", () => {
+  setAuthMode(!isSignup);
+});
 
-$("loginForm").onsubmit=async e=>{
- e.preventDefault();
- authMessage("Signing in...");
- try{
-  await signInWithEmailAndPassword(
-   auth,$("loginEmail").value.trim(),
-   $("loginPassword").value
-  );
- }catch(error){authMessage(error.message)}
-};
+$("authForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  if (busy) return;
 
-$("registerForm").onsubmit=async e=>{
- e.preventDefault();
- authMessage("Creating account...");
- try{
-  const name=$("registerName").value.trim();
-  const result=await createUserWithEmailAndPassword(
-   auth,$("registerEmail").value.trim(),
-   $("registerPassword").value
-  );
-  await updateProfile(result.user,{displayName:name});
- }catch(error){authMessage(error.message)}
-};
+  busy = true;
+  $("authSubmit").disabled = true;
+  $("authSubmit").textContent = "Please wait...";
+  showError("");
 
-$("googleButton").onclick=async()=>{
- authMessage("Opening Google...");
- try{await signInWithPopup(auth,googleProvider)}
- catch(error){authMessage(error.message)}
-};
+  const email = $("email").value.trim();
+  const password = $("password").value;
 
-$("forgot").onclick=async e=>{
- e.preventDefault();
- const email=$("loginEmail").value.trim();
- if(!email){authMessage("Enter your email first.");return}
- try{
-  await sendPasswordResetEmail(auth,email);
-  authMessage("Password reset email sent!");
- }catch(error){authMessage(error.message)}
-};
+  try {
+    if (isSignup) {
+      const name = $("name").value.trim();
+      const credential = await createUserWithEmailAndPassword(
+        auth, email, password
+      );
 
-$("logoutButton").onclick=()=>signOut(auth);
-
-function loadHistory(){
- const key="krypto_chats_"+auth.currentUser.uid;
- try{conversations=JSON.parse(localStorage.getItem(key)||"[]")}
- catch{conversations=[]}
-}
-
-function saveHistory(){
- const key="krypto_chats_"+auth.currentUser.uid;
- localStorage.setItem(key,JSON.stringify(conversations));
-}
-
-function newConversation(){
- activeChat={
-  id:Date.now().toString(),
-  title:"New conversation",
-  messages:[]
- };
- conversations.unshift(activeChat);
- render();
-}
-
-function render(){
- $("messages").replaceChildren();
- $("welcome").classList.toggle(
-  "hidden",!!(activeChat&&activeChat.messages.length)
- );
-
- if(activeChat){
-  activeChat.messages.forEach(item=>{
-   const box=document.createElement("div");
-   box.className="message "+(
-    item.role==="user"?"user-message":"ai-message"
-   );
-
-   const label=document.createElement("div");
-   label.className="message-label";
-   label.textContent=item.role==="user"?"YOU":"NETWORK KRYPTO AI";
-
-   const content=document.createElement("div");
-   content.textContent=item.text;
-
-   box.append(label,content);
-   $("messages").append(box);
-  });
- }
-
- $("history").replaceChildren();
-
- conversations.forEach(chat=>{
-  const item=document.createElement("div");
-  item.className="history-item";
-  item.textContent=chat.title;
-  item.onclick=()=>{
-   activeChat=chat;
-   render();
-   $("sidebar").classList.remove("open");
-  };
-  $("history").append(item);
- });
-
- $("chat").scrollTop=$("chat").scrollHeight;
-}
-
-function addMessage(role,text){
- activeChat.messages.push({role,text});
- if(role==="user"&&activeChat.messages.length===1){
-  activeChat.title=text.slice(0,35);
- }
- saveHistory();
- render();
-}
-
-function extractAnswer(data){
- if(typeof data==="string"){
-  try{return extractAnswer(JSON.parse(data))}
-  catch{return data}
- }
-
- if(data&&typeof data==="object"){
-  for(const key of ["result","response","output","text","message"]){
-   if(typeof data[key]==="string")return data[key];
+      if (name) {
+        await updateProfile(credential.user, { displayName: name });
+      }
+    } else {
+      await signInWithEmailAndPassword(auth, email, password);
+    }
+  } catch (error) {
+    showError(error.message);
+  } finally {
+    busy = false;
+    $("authSubmit").disabled = false;
+    $("authSubmit").textContent = isSignup ? "Create Account" : "Sign In";
   }
-  return JSON.stringify(data,null,2);
- }
- return String(data);
-}
+});
 
-async function sendMessage(){
- if(sending)return;
+$("googleButton").addEventListener("click", async () => {
+  showError("");
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch (error) {
+    showError(error.message);
+  }
+});
 
- const text=$("prompt").value.trim();
- if(!text)return;
+$("forgotButton").addEventListener("click", async () => {
+  const email = $("email").value.trim();
 
- if(!activeChat)newConversation();
-
- $("prompt").value="";
- addMessage("user",text);
-
- sending=true;
- $("sendButton").disabled=true;
- $("status").textContent="● Thinking...";
-
- const waiting=document.createElement("div");
- waiting.className="message ai-message";
- waiting.textContent="Network Krypto AI is thinking...";
- $("messages").append(waiting);
-
- try{
-  const response=await fetch(API_URL,{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({message:text})
-  });
-
-  const raw=await response.text();
-
-  if(!response.ok){
-   throw new Error("API error "+response.status+": "+raw.slice(0,400));
+  if (!email) {
+    showError("Enter your email address first.");
+    return;
   }
 
-  let data;
-  try{data=JSON.parse(raw)}
-  catch{data=raw}
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showError("Password reset email sent. Check your inbox.");
+  } catch (error) {
+    showError(error.message);
+  }
+});
 
-  waiting.remove();
-  addMessage("assistant",extractAnswer(data));
-  $("status").textContent="● Online";
+onAuthStateChanged(auth, user => {
+  const loggedIn = !!user;
 
- }catch(error){
-  waiting.remove();
-  addMessage("assistant",
-   "Connection error: "+error.message+
-   "\nPlease check the Cloudflare Worker and try again."
-  );
-  $("status").textContent="● Connection error";
- }finally{
-  sending=false;
-  $("sendButton").disabled=false;
-  $("prompt").focus();
- }
+  $("authArea").style.display = loggedIn ? "none" : "block";
+  $("chatArea").style.display = loggedIn ? "block" : "none";
+
+  if (user) {
+    $("userEmail").textContent =
+      user.displayName || user.email || "Signed in";
+  }
+});
+
+$("logoutButton").addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+function addMessage(text, type) {
+  const element = document.createElement("div");
+  element.className = "message " + type;
+  element.textContent = text;
+  $("messages").appendChild(element);
+  $("messages").scrollTop = $("messages").scrollHeight;
+  return element;
 }
 
-$("sendButton").onclick=sendMessage;
+function getAIText(data) {
+  if (typeof data === "string") return data;
 
-$("prompt").onkeydown=e=>{
- if(e.key==="Enter"&&!e.shiftKey){
-  e.preventDefault();
-  sendMessage();
- }
-};
+  if (data && typeof data === "object") {
+    for (const key of ["result", "response", "output", "text", "message"]) {
+      if (typeof data[key] === "string") return data[key];
+    }
+  }
 
-$("newChat").onclick=()=>{
- newConversation();
- $("sidebar").classList.remove("open");
- $("prompt").focus();
-};
+  return JSON.stringify(data);
+}
 
-$("menuButton").onclick=()=>$("sidebar").classList.toggle("open");
-$("closeSidebar").onclick=()=>$("sidebar").classList.remove("open");
+$("chatForm").addEventListener("submit", async event => {
+  event.preventDefault();
 
-onAuthStateChanged(auth,user=>{
- $("authScreen").classList.toggle("hidden",!!user);
- $("app").classList.toggle("hidden",!user);
+  const input = $("chatInput");
+  const text = input.value.trim();
 
- if(user){
-  $("userName").textContent=user.displayName||"Krypto User";
-  $("userEmail").textContent=user.email||"";
-  loadHistory();
-  activeChat=null;
-  render();
- }
+  if (!text) return;
+
+  input.value = "";
+  addMessage(text, "user");
+
+  const loading = addMessage("Network Krypto AI is thinking...", "bot");
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: text })
+    });
+
+    const raw = await response.text();
+
+    if (!response.ok) {
+      throw new Error("Server error (" + response.status + "): " + raw.slice(0, 250));
+    }
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = raw;
+    }
+
+    loading.textContent = getAIText(data);
+
+  } catch (error) {
+    loading.textContent = "Connection error: " + error.message;
+  }
 });
 </script>
-
 </body>
 </html>
