@@ -477,6 +477,9 @@ const ACCOUNT_URL="https://network-krypto-ai.taybatouch.workers.dev/account";
 const $=id=>document.getElementById(id);
 let isSignup=false,busy=false;
 
+// NEW: stores recent messages during this browser session
+let conversationHistory=[];
+
 function showError(message){
  $("authError").textContent=message;
 }
@@ -591,6 +594,8 @@ onAuthStateChanged(auth,async user=>{
  $("chatArea").style.display=user?"block":"none";
 
  if(!user){
+  // NEW: clear session conversation when signed out
+  conversationHistory=[];
   $("userEmail").textContent="";
   $("creditBalance").textContent="Credits: --";
   return;
@@ -619,7 +624,7 @@ function addMessage(text,type){
  return el;
 }
 
-// EXISTING KODARI AI CHAT CONNECTION
+// CHAT WITH CONVERSATION HISTORY
 $("chatForm").onsubmit=async e=>{
  e.preventDefault();
 
@@ -639,7 +644,10 @@ $("chatForm").onsubmit=async e=>{
   const response=await fetch(API_URL,{
    method:"POST",
    headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({message:text})
+   body:JSON.stringify({
+    message:text,
+    history:conversationHistory.slice(-20)
+   })
   });
 
   const raw=await response.text();
@@ -659,8 +667,19 @@ $("chatForm").onsubmit=async e=>{
   let result=typeof data==="string"?data:
    data.result||data.response||data.output||data.text||data.message||JSON.stringify(data);
 
+  result=String(result);
+
   loading.classList.remove("typing");
   loading.textContent=result;
+
+  // NEW: save both sides of the conversation
+  conversationHistory.push(
+   {role:"user",content:text},
+   {role:"assistant",content:result}
+  );
+
+  // Keep the latest 20 messages
+  conversationHistory=conversationHistory.slice(-20);
 
  }catch(error){
   loading.classList.remove("typing");
@@ -670,4 +689,4 @@ $("chatForm").onsubmit=async e=>{
 </script>
 </body>
  </html>
-                                                    
+ 
