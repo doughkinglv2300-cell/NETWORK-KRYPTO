@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070914">
+<meta name="description" content="Network Krypto AI — your AI development command center.">
+<title>Network Krypto AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#070914;--panel:#0d1222;--panel2:#111a2d;--line:rgba(145,166,220,.13);--text:#f3f6ff;--muted:#8994ad;--blue:#5790ff;--purple:#8b68ff;--cyan:#54d8f2;--green:#42d69a;--red:#ff667e;--gold:#f4c96b;--radius:19px;--shadow:0 22px 70px rgba(0,0,0,.32)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -15%,rgba(57,91,185,.19),transparent 42%),radial-gradient(ellipse at 100% 55%,rgba(102,58,194,.09),transparent 38%),var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;overflow-x:hidden}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+::selection{background:rgba(87,144,255,.35)}
+#stars{position:fixed;inset:0;pointer-events:none;opacity:.28;z-index:-1;background-image:radial-gradient(1px 1px at 12% 22%,#9bbaff 50%,transparent 60%),radial-gradient(1px 1px at 77% 18%,#9bbaff 50%,transparent 60%),radial-gradient(1px 1px at 36% 68%,#9bbaff 50%,transparent 60%),radial-gradient(1px 1px at 88% 79%,#9bbaff 50%,transparent 60%),radial-gradient(1px 1px at 57% 44%,#9bbaff 50%,transparent 60%);background-size:360px 360px}
+.app{min-height:100vh}
+.topbar{height:72px;position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,58px);border-bottom:1px solid var(--line);background:rgba(7,9,20,.82);backdrop-filter:blur(22px)}
+.brand{display:flex;align-items:center;gap:11px;font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:-.5px}
+.brand-mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,#5790ff,#8b68ff);box-shadow:0 0 28px rgba(87,144,255,.28);font-size:18px}
+.brand-name span{color:#78a5ff}
+.nav{display:flex;align-items:center;gap:5px}
+.nav button,.nav a{border:0;background:transparent;color:var(--muted);padding:10px 13px;border-radius:10px;font-size:13px;font-weight:600;transition:.2s}
+.nav button:hover,.nav button.active,.nav a:hover{color:white;background:rgba(112,143,220,.11)}
+.top-actions{display:flex;align-items:center;gap:10px}
+.credit-pill{display:flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid rgba(244,201,107,.2);background:rgba(244,201,107,.07);border-radius:999px;color:#f4d58c;font-size:12px;font-weight:700}
+.avatar-btn{width:37px;height:37px;border-radius:50%;border:1px solid var(--line);background:linear-gradient(135deg,#25375e,#473477);color:white;font-weight:800;overflow:hidden}
+.avatar-btn img{width:100%;height:100%;object-fit:cover}
+.mobile-menu{display:none;border:1px solid var(--line);background:var(--panel);color:white;border-radius:10px;padding:9px}
+.main{max-width:1250px;margin:0 auto;padding:36px clamp(16px,4vw,38px) 80px}
+.page{display:none;animation:rise .35s ease}
+.page.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.hero{text-align:center;padding:55px 12px 25px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid rgba(87,144,255,.2);background:rgba(87,144,255,.07);border-radius:999px;color:#9bbaff;font-size:11px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase}
+.hero h1{font-family:"Space Grotesk",sans-serif;font-size:clamp(34px,6vw,62px);line-height:1.08;letter-spacing:-2.5px;margin:20px 0 12px}
+.gradient{background:linear-gradient(100deg,#fff 4%,#8bb3ff 48%,#b39aff 92%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:620px;margin:0 auto;color:var(--muted);line-height:1.7;font-size:15px}
+.studio-card{max-width:850px;margin:22px auto 18px;padding:18px;border:1px solid rgba(120,151,225,.2);border-radius:23px;background:linear-gradient(145deg,rgba(16,23,42,.97),rgba(9,13,25,.97));box-shadow:0 25px 90px rgba(25,54,123,.14),inset 0 1px rgba(255,255,255,.035)}
+.prompt-label{display:block;color:#9ba8c4;font-size:12px;margin:0 0 10px}
+#promptInput{width:100%;min-height:112px;resize:vertical;background:transparent;border:0;color:white;outline:0;font-size:15px;line-height:1.65}
+#promptInput::placeholder{color:#65718d}
+.prompt-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:13px}
+.prompt-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tool-chip{border:1px solid var(--line);background:rgba(255,255,255,.035);color:#aebbd5;border-radius:9px;padding:8px 10px;font-size:11px}
+.primary{border:0;border-radius:11px;background:linear-gradient(110deg,#4f8cff,#795cff);color:white;padding:11px 17px;font-size:12px;font-weight:800;box-shadow:0 8px 25px rgba(80,125,255,.2);transition:.2s}
+.primary:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.secondary{border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.045);color:#dce5fb;padding:10px 14px;font-size:12px;font-weight:700}
+.secondary:hover{background:rgba(255,255,255,.09)}
+.notice{max-width:850px;margin:0 auto 28px;padding:11px 14px;border:1px solid rgba(244,201,107,.17);border-radius:12px;background:rgba(244,201,107,.055);color:#c8b985;font-size:11px;display:flex;align-items:center;gap:9px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;max-width:850px;margin:0 auto}
+.quick-card,.panel,.stat-card,.project-card,.quest-card{border:1px solid var(--line);background:linear-gradient(145deg,rgba(17,24,43,.9),rgba(10,14,27,.92));border-radius:var(--radius);box-shadow:var(--shadow)}
+.quick-card{padding:17px;text-align:left;cursor:pointer;transition:.22s}
+.quick-card:hover,.project-card:hover,.quest-card:hover{transform:translateY(-3px);border-color:rgba(100,150,255,.35)}
+.quick-icon{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:rgba(87,144,255,.12);color:#8eb2ff;font-size:17px;margin-bottom:12px}
+.quick-card strong{display:block;font-size:13px}
+.quick-card small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin:25px 0 18px}
+.section-head h2{font-family:"Space Grotesk",sans-serif;font-size:27px;letter-spacing:-.8px;margin:0}
+.section-head p{color:var(--muted);font-size:12px;margin:7px 0 0}
+.section-head .actions{display:flex;gap:8px;flex-wrap:wrap}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.panel{padding:20px}
+.panel h3{font-size:15px;margin:0 0 7px}
+.muted{color:var(--muted)}
+.small{font-size:12px;line-height:1.6}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:20px 0}
+.stat-card{padding:18px}
+.stat-card .label{font-size:11px;color:var(--muted)}
+.stat-card .value{font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:700;margin-top:8px}
+.stat-card .sub{font-size:10px;color:#7f8ba5;margin-top:4px}
+.page-title{padding:26px 0 16px}
+.page-title h1{font-family:"Space Grotesk",sans-serif;font-size:clamp(30px,4vw,43px);letter-spacing:-1.5px;margin:0 0 8px}
+.page-title p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.project-card{padding:18px;transition:.2s}
+.project-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.project-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(139,104,255,.13);font-size:18px}
+.tag{font-size:10px;color:#9cb9ff;background:rgba(87,144,255,.1);padding:5px 8px;border-radius:999px}
+.project-card h3{margin:0 0 6px;font-size:14px}
+.project-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.6}
+.project-card button{margin-top:15px}
+.quest-card{padding:18px;display:flex;gap:14px;align-items:flex-start;transition:.2s}
+.quest-icon{flex:0 0 40px;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:rgba(84,216,242,.1);color:var(--cyan);font-size:18px}
+.quest-content{flex:1}
+.quest-content h3{font-size:13px;margin:1px 0 5px}
+.quest-content p{font-size:11px;line-height:1.55;color:var(--muted);margin:0}
+.quest-reward{font-size:10px;color:#f4d58c;font-weight:800;margin-top:9px}
+.quest-status{font-size:10px;color:#91a0bc;margin-top:9px}
+.progress{height:6px;border-radius:20px;background:#202940;overflow:hidden;margin-top:12px}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:20px}
+.wallet-hero{padding:25px;border-radius:22px;border:1px solid rgba(244,201,107,.2);background:radial-gradient(circle at 90% 10%,rgba(244,201,107,.13),transparent 35%),linear-gradient(135deg,#171b2c,#101426)}
+.wallet-hero .balance{font-family:"Space Grotesk",sans-serif;font-size:48px;font-weight:700;letter-spacing:-2px;margin:8px 0}
+.wallet-hero .balance small{font-size:14px;color:#d5c18e;letter-spacing:0}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:480px}
+th,td{text-align:left;padding:13px 15px;border-bottom:1px solid var(--line);font-size:11px}
+th{color:#93a2c0;background:rgba(255,255,255,.025);font-weight:700}
+td{color:#cbd5ea}
+tr:last-child td{border-bottom:0}
+.profile-layout{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.profile-card{text-align:center;padding:25px}
+.big-avatar{width:86px;height:86px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;background:linear-gradient(135deg,#5790ff,#8b68ff);font-size:30px;font-weight:800;overflow:hidden}
+.big-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-card h2{font-size:18px;margin:0 0 5px}
+.profile-card p{color:var(--muted);font-size:11px;margin:0}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.field label{font-size:11px;color:#a9b6d0;font-weight:700}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#090e1c;color:white;border-radius:11px;padding:12px;font-size:12px}
+.field input:disabled{opacity:.65}
+.settings-list{display:grid;gap:10px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:13px 0;border-bottom:1px solid var(--line)}
+.setting-row:last-child{border-bottom:0}
+.setting-row strong{font-size:12px}
+.setting-row small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.chat-layout{display:grid;grid-template-columns:245px 1fr;gap:14px;min-height:580px}
+.chat-side{padding:14px}
+.chat-side h3{font-size:12px;margin:4px 0 13px}
+.chat-list{display:grid;gap:6px}
+.chat-item{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#9ba8c1;padding:10px;border-radius:9px;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-item.active,.chat-item:hover{background:rgba(87,144,255,.1);color:white;border-color:rgba(87,144,255,.16)}
+.chat-main{display:flex;flex-direction:column;min-height:580px;padding:17px}
+.chat-messages{flex:1;overflow:auto;display:flex;flex-direction:column;gap:13px;padding:8px 2px 20px}
+.message{max-width:88%;padding:13px 15px;border-radius:14px;font-size:12px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.message.user{align-self:flex-end;background:linear-gradient(120deg,#315eae,#5946a3);color:white;border-bottom-right-radius:4px}
+.message.assistant{align-self:flex-start;background:#151e31;border:1px solid var(--line);color:#dce5f7;border-bottom-left-radius:4px}
+.message .role{display:block;font-size:9px;color:#a9bce7;font-weight:800;letter-spacing:.7px;margin-bottom:5px}
+.chat-compose{display:flex;gap:9px;align-items:flex-end;border:1px solid var(--line);border-radius:14px;background:#090e1c;padding:9px}
+.chat-compose textarea{flex:1;min-height:42px;max-height:130px;resize:vertical;background:transparent;border:0;outline:0;color:white;padding:9px;font-size:12px;line-height:1.5}
+.chat-compose textarea::placeholder{color:#687590}
+.empty-state{text-align:center;padding:45px 15px;color:var(--muted);font-size:12px;line-height:1.7}
+.empty-state .symbol{font-size:32px;margin-bottom:12px}
+.auth-screen{position:fixed;inset:0;z-index:100;background:rgba(4,6,14,.88);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:18px}
+.auth-screen.show{display:flex}
+.auth-card{width:min(100%,430px);padding:27px;border:1px solid rgba(130,158,226,.2);border-radius:22px;background:linear-gradient(145deg,#121a2e,#090e1b);box-shadow:0 30px 100px rgba(0,0,0,.55)}
+.auth-card h2{font-family:"Space Grotesk",sans-serif;font-size:25px;margin:0 0 7px}
+.auth-card>p{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 20px}
+.auth-tabs{display:flex;background:#090e1b;padding:4px;border-radius:10px;margin-bottom:17px}
+.auth-tabs button{flex:1;border:0;background:transparent;color:var(--muted);padding:9px;border-radius:8px;font-size:11px;font-weight:700}
+.auth-tabs button.active{background:#1c2944;color:white}
+.auth-error{display:none;color:#ff8b9d;background:rgba(255,102,126,.08);border:1px solid rgba(255,102,126,.2);padding:10px;border-radius:9px;font-size:11px;margin-bottom:12px}
+.auth-error.show{display:block}
+.google-btn{width:100%;margin-top:10px}
+.divider-text{text-align:center;color:#697590;font-size:10px;margin:15px 0}
+.auth-foot{text-align:center;color:var(--muted);font-size:10px;margin-top:17px;line-height:1.6}
+.dropdown{position:absolute;right:clamp(12px,4vw,58px);top:62px;width:220px;padding:9px;border:1px solid var(--line);border-radius:14px;background:#11182a;box-shadow:var(--shadow);display:none;z-index:50}
+.dropdown.show{display:block}
+.dropdown .user-summary{padding:10px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.dropdown .user-summary strong{display:block;font-size:12px}
+.dropdown .user-summary small{color:var(--muted);font-size:10px}
+.dropdown button{width:100%;text-align:left;border:0;background:transparent;color:#cbd5ea;padding:10px;border-radius:8px;font-size:11px}
+.dropdown button:hover{background:rgba(255,255,255,.06)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:150;background:#18233a;border:1px solid rgba(120,160,255,.25);color:white;padding:12px 17px;border-radius:12px;font-size:11px;box-shadow:var(--shadow);transition:.25s;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.loading-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#8db2ff;margin:0 2px;animation:pulse 1s infinite alternate}
+@keyframes pulse{to{opacity:.2;transform:translateY(-3px)}}
+.planet-wrap{position:fixed;left:18px;bottom:18px;z-index:5;width:76px;height:76px;opacity:.78;pointer-events:none}
+.planet{width:68px;height:68px;border-radius:50%;position:relative;background:radial-gradient(circle at 32% 28%,#9dbdff 0,#4869b8 17%,#1a2853 48%,#080d1e 75%);box-shadow:0 0 24px rgba(77,132,255,.25),inset -10px -9px 18px #02040b;animation:planetSpin 14s linear infinite}
+.planet:before{content:"";position:absolute;inset:19px -13px;border:2px solid rgba(111,167,255,.62);border-left-color:transparent;border-right-color:rgba(163,131,255,.55);border-radius:50%;transform:rotate(-22deg)}
+.planet:after{content:"";position:absolute;inset:8px;border-radius:50%;background:repeating-linear-gradient(135deg,transparent 0 8px,rgba(153,190,255,.08) 9px 10px)}
+@keyframes planetSpin{to{transform:rotate(360deg)}}
+.footer{text-align:center;color:#5f6b85;font-size:10px;padding:30px 0 0}
+.hidden{display:none!important}
+@media(min-width:1000px){.hero{padding-top:62px}.studio-card{margin-top:28px}}
+@media(max-width:850px){.nav{gap:0}.nav button,.nav a{padding:9px 8px;font-size:11px}.quick-grid{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:repeat(2,1fr)}.profile-layout{grid-template-columns:1fr}.profile-card{display:flex;align-items:center;text-align:left;gap:15px}.big-avatar{margin:0;width:60px;height:60px;flex:0 0 60px}.chat-layout{grid-template-columns:190px 1fr}}
+@media(max-width:620px){.topbar{height:62px;padding:0 13px}.brand{font-size:13px}.brand-mark{width:31px;height:31px}.nav{display:none;position:absolute;top:61px;left:10px;right:10px;padding:8px;background:#10182a;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);flex-wrap:wrap}.nav.open{display:flex}.nav button{flex:1 1 28%;font-size:11px}.mobile-menu{display:block}.credit-pill{font-size:10px;padding:7px 9px}.main{padding:15px 13px 70px}.hero{padding:45px 3px 18px}.hero h1{letter-spacing:-1.5px}.hero p{font-size:13px}.studio-card{padding:13px;border-radius:17px}.quick-grid{gap:9px}.quick-card{padding:13px}.quick-card strong{font-size:12px}.grid-2,.grid-3{grid-template-columns:1fr}.stat-row{gap:8px}.stat-card{padding:12px}.stat-card .value{font-size:22px}.section-head{align-items:flex-start;flex-direction:column}.chat-layout{grid-template-columns:1fr;min-height:0}.chat-side{padding:10px}.chat-side h3{display:none}.chat-list{display:flex;overflow:auto}.chat-item{width:150px;flex:0 0 150px}.chat-main{min-height:65vh;padding:10px}.chat-messages{min-height:300px}.message{max-width:95%}.planet-wrap{width:48px;height:48px;left:8px;bottom:8px;opacity:.36}.planet{width:42px;height:42px}.planet:before{inset:12px -8px}.wallet-hero .balance{font-size:39px}.dropdown{top:57px;right:10px}.page-title{padding-top:24px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div class="app">
+<header class="topbar">
+  <a class="brand" href="#" data-page-link="studio" aria-label="Network Krypto AI home">
+    <span class="brand-mark">✦</span><span class="brand-name">NETWORK <span>KRYPTO</span> AI</span>
+  </a>
+  <nav class="nav" id="mainNav" aria-label="Main navigation">
+    <button class="active" data-page="studio">Studio</button>
+    <button data-page="workspace">Workspace</button>
+    <button data-page="quests">Quests</button>
+    <button data-page="credits">Credits</button>
+    <button data-page="community">Community</button>
+  </nav>
+  <div class="top-actions">
+    <div class="credit-pill">✦ <span id="topCredits">—</span> credits</div>
+    <button class="avatar-btn" id="avatarButton" aria-label="Open profile menu">?</button>
+    <button class="mobile-menu" id="mobileMenu" aria-label="Toggle navigation">☰</button>
+  </div>
+  <div class="dropdown" id="profileDropdown">
+    <div class="user-summary"><strong id="menuName">Guest</strong><small id="menuEmail">Not signed in</small></div>
+    <button data-page="profile">♙ My profile</button>
+    <button data-page="settings">⚙ Settings</button>
+    <button data-page="history">◷ Chat history</button>
+    <button id="menuAuthAction">↗ Sign in / Create account</button>
+  </div>
+</header>
+
+<main class="main">
+  <section class="page active" id="page-studio">
+    <div class="hero">
+      <span class="eyebrow">✦ YOUR AI DEVELOPMENT COMMAND CENTER</span>
+      <h1>Build beyond <span class="gradient">limits.</span></h1>
+      <p id="welcomeLine">One intelligent workspace for Minecraft, Discord bots, coding, plugins and creative projects.</p>
+    </div>
+    <div class="studio-card">
+      <label class="prompt-label" for="promptInput">What are we building today?</label>
+      <textarea id="promptInput" placeholder="Ask Network Krypto AI to build, debug, explain or improve something..." maxlength="12000"></textarea>
+      <div class="prompt-footer">
+        <div class="prompt-tools">
+          <button class="tool-chip" id="clearPrompt">＋ New prompt</button>
+          <span class="tool-chip">✦ Network Krypto AI</span>
+          <span class="tool-chip">Auto mode</span>
+        </div>
+        <button class="primary" id="startPrompt">Start building ↗</button>
+      </div>
+    </div>
+    <div class="notice">◈ <span><strong>Account safety:</strong> credits and wallet balances are controlled by the secure backend, not by this page.</span></div>
+    <div class="quick-grid">
+      <button class="quick-card" data-prompt="Help me build a Minecraft Java plugin. Start by asking for the required features."><span class="quick-icon">⚒</span><strong>Minecraft development</strong><small>Plugins, Paper, Fabric and servers</small></button>
+      <button class="quick-card" data-prompt="Help me develop a Discord bot with a clean architecture."><span class="quick-icon">◉</span><strong>Discord bots</strong><small>Commands, moderation and APIs</small></button>
+      <button class="quick-card" data-prompt="Review my code and help me find and fix bugs."><span class="quick-icon">⌘</span><strong>Code assistant</strong><small>Debug, explain and improve code</small></button>
+      <button class="quick-card" data-prompt="Help me plan and build a website from scratch."><span class="quick-icon">◇</span><strong>Web development</strong><small>Frontend, backend and databases</small></button>
+    </div>
+    <div class="section-head"><div><h2>Your command center</h2><p>Jump straight into the tools you use.</p></div></div>
+    <div class="grid-3">
+      <div class="project-card"><div class="project-top"><span class="project-icon">▦</span><span class="tag">PROJECTS</span></div><h3>Workspace</h3><p>Organize projects and keep your development work together.</p><button class="secondary" data-page="workspace">Open workspace →</button></div>
+      <div class="project-card"><div class="project-top"><span class="project-icon">⚑</span><span class="tag">PROGRESS</span></div><h3>Quests</h3><p>Explore account tasks and track your progress.</p><button class="secondary" data-page="quests">View quests →</button></div>
+      <div class="project-card"><div class="project-top"><span class="project-icon">✧</span><span class="tag">WALLET</span></div><h3>Credits</h3><p>View your balance and available credit information.</p><button class="secondary" data-page="credits">Open wallet →</button></div>
+    </div>
+  </section>
+
+  <section class="page" id="page-workspace">
+    <div class="page-title"><h1>One prompt. <span class="gradient">Every project.</span></h1><p>Keep related development work organized in one workspace.</p></div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="label">WORKSPACE</div><div class="value">01</div><div class="sub">Your development space</div></div>
+      <div class="stat-card"><div class="label">CHAT SESSIONS</div><div class="value" id="sessionCount">0</div><div class="sub">Saved in this browser</div></div>
+      <div class="stat-card"><div class="label">ACCOUNT</div><div class="value" id="workspaceAccount">Guest</div><div class="sub">Authentication status</div></div>
+    </div>
+    <div class="section-head"><div><h2>Project launchpad</h2><p>Choose a starting point for your next build.</p></div><div class="actions"><button class="primary" id="workspaceNewChat">＋ New chat</button></div></div>
+    <div class="grid-3">
+      <div class="project-card"><div class="project-top"><span class="project-icon">⛏</span><span class="tag">MINECRAFT</span></div><h3>Minecraft development</h3><p>Plan plugins, server systems, datapacks and performance improvements.</p><button class="secondary" data-prompt="I want to create a Minecraft project. Help me define its requirements.">Start project →</button></div>
+      <div class="project-card"><div class="project-top"><span class="project-icon">◉</span><span class="tag">DISCORD</span></div><h3>Discord development</h3><p>Design bots, commands, integrations and server utilities.</p><button class="secondary" data-prompt="I want to create a Discord bot. Help me plan the architecture.">Start project →</button></div>
+      <div class="project-card"><div class="project-top"><span class="project-icon">⌘</span><span class="tag">WEB</span></div><h3>Web applications</h3><p>Build responsive interfaces and connect reliable backend services.</p><button class="secondary" data-prompt="I want to build a web application. Help me plan the frontend and backend.">Start project →</button></div>
+    </div>
+    <div class="section-head"><div><h2>Recent sessions</h2><p>Your locally saved chat sessions.</p></div><button class="secondary" data-page="history">View all →</button></div>
+    <div class="panel" id="recentSessions"><div class="empty-state">No sessions yet. Start a conversation in Studio.</div></div>
+  </section>
+
+  <section class="page" id="page-quests">
+    <div class="page-title"><h1>Your <span class="gradient">quests.</span></h1><p>Track your Network Krypto AI journey. Quest rewards must be verified by the server.</p></div>
+    <div class="notice">✦ Quest completion and credit rewards are not granted by this frontend. Verified quest rules and rewards must come from the secure backend.</div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="label">QUESTS SHOWN</div><div class="value">04</div><div class="sub">Starter checklist</div></div>
+      <div class="stat-card"><div class="label">VERIFIED REWARDS</div><div class="value" id="questRewards">—</div><div class="sub">Loaded from server when available</div></div>
+      <div class="stat-card"><div class="label">YOUR CREDITS</div><div class="value" id="questCredits">—</div><div class="sub">Server-managed balance</div></div>
+    </div>
+    <div class="grid-2">
+      <article class="quest-card"><div class="quest-icon">♙</div><div class="quest-content"><h3>Complete your profile</h3><p>Add your display name and profile details to your account.</p><div class="quest-status" id="profileQuestStatus">Checking account…</div></div></article>
+      <article class="quest-card"><div class="quest-icon">✉</div><div class="quest-content"><h3>Verify your email</h3><p>Verify the email address connected to your account.</p><div class="quest-status" id="emailQuestStatus">Sign in to check this quest.</div></div></article>
+      <article class="quest-card"><div class="quest-icon">✦</div><div class="quest-content"><h3>Meet your AI assistant</h3><p>Start your first conversation in the Studio.</p><div class="quest-status" id="chatQuestStatus">Start a chat to update this status.</div></div></article>
+      <article class="quest-card"><div class="quest-icon">▦</div><div class="quest-content"><h3>Explore your workspace</h3><p>Visit your workspace and explore the project launchpad.</p><div class="quest-status" id="workspaceQuestStatus">Not visited in this session.</div></div></article>
+    </div>
+  </section>
+
+  <section class="page" id="page-credits">
+    <div class="page-title"><h1>Your <span class="gradient">credits.</span></h1><p>Transparent wallet information for your AI usage.</p></div>
+    <div class="wallet-hero">
+      <div class="muted small">AVAILABLE CREDIT BALANCE</div>
+      <div class="balance"><span id="walletBalance">—</span> <small>credits</small></div>
+      <div class="small muted" id="walletStatus">Sign in to load your account balance.</div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px"><button class="primary" id="refreshWallet">↻ Refresh balance</button><button class="secondary" data-page="profile">Account details</button></div>
+    </div>
+    <div class="section-head"><div><h2>Wallet activity</h2><p>Recent credit transactions, when provided by the backend.</p></div></div>
+    <div class="panel"><div class="table-wrap"><table><thead><tr><th>ACTIVITY</th><th>AMOUNT</th><th>DATE</th><th>STATUS</th></tr></thead><tbody id="transactionRows"><tr><td colspan="4" class="muted">No transaction data loaded.</td></tr></tbody></table></div></div>
+    <p class="muted small" style="margin-top:13px">New accounts receive the configured 30-credit welcome grant once, through the backend. This page never creates or edits credit balances.</p>
+  </section>
+
+  <section class="page" id="page-chat">
+    <div class="page-title"><h1>AI <span class="gradient">Studio.</span></h1><p>Your development assistant. Ask a question or continue a project.</p></div>
+    <div class="chat-layout">
+      <aside class="panel chat-side">
+        <button class="primary" id="newChat" style="width:100%;margin-bottom:16px">＋ New conversation</button>
+        <h3>RECENT CHATS</h3>
+        <div class="chat-list" id="chatList"></div>
+      </aside>
+      <div class="panel chat-main">
+        <div class="chat-messages" id="chatMessages"><div class="empty-state"><div class="symbol">✦</div><strong>Welcome to Network Krypto AI</strong><br>Start with a question, a bug, or an idea you want to build.</div></div>
+        <div class="chat-compose">
+          <textarea id="chatInput" placeholder="Message Network Krypto AI..." maxlength="12000"></textarea>
+          <button class="primary" id="sendMessage" aria-label="Send message">↑</button>
+        </div>
+        <div class="muted" style="font-size:9px;margin:8px 3px 0">AI responses can contain mistakes. Review code before deploying it.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-history">
+    <div class="page-title"><h1>Chat <span class="gradient">history.</span></h1><p>Conversations saved on this device.</p></div>
+    <div class="panel" id="historyList"><div class="empty-state">No saved conversations yet.</div></div>
+  </section>
+
+  <section class="page" id="page-profile">
+    <div class="page-title"><h1>Your <span class="gradient">profile.</span></h1><p>Manage your identity and account information.</p></div>
+    <div class="profile-layout">
+      <div class="panel profile-card">
+        <div class="big-avatar" id="bigAvatar">?</div>
+        <div><h2 id="profileDisplayName">Guest user</h2><p id="profileEmail">Not signed in</p><p id="profileProvider" style="margin-top:6px">No active account</p></div>
+      </div>
+      <div class="panel">
+        <h3>Personal information</h3>
+        <p class="muted small" style="margin-bottom:18px">Update your display name. Your email is managed by Firebase Authentication.</p>
+        <div class="field"><label for="displayNameInput">DISPLAY NAME</label><input id="displayNameInput" maxlength="40" placeholder="Your display name"></div>
+        <div class="field"><label for="emailInput">EMAIL ADDRESS</label><input id="emailInput" disabled placeholder="Your account email"></div>
+        <button class="primary" id="saveProfile">Save profile</button>
+        <button class="secondary" id="verifyEmail" style="margin-left:7px">Send verification email</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-settings">
+    <div class="page-title"><h1>Account <span class="gradient">settings.</span></h1><p>Security and session controls.</p></div>
+    <div class="panel">
+      <div class="settings-list">
+        <div class="setting-row"><div><strong>Authentication</strong><small id="settingsAuthStatus">You are browsing as a guest.</small></div><button class="secondary" id="settingsAuthButton">Sign in</button></div>
+        <div class="setting-row"><div><strong>Email verification</strong><small id="settingsVerifyStatus">Sign in to view verification status.</small></div><button class="secondary" id="settingsVerifyButton">Verify email</button></div>
+        <div class="setting-row"><div><strong>Password reset</strong><small>Send a password reset link to your email.</small></div><button class="secondary" id="resetPassword">Send reset</button></div>
+        <div class="setting-row"><div><strong>Sign out</strong><small>End the current account session on this device.</small></div><button class="secondary" id="signOutButton">Sign out</button></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:15px"><h3>Privacy and account safety</h3><p class="muted small">Never share your password, private API keys, authentication tokens or recovery codes. Network Krypto AI wallet changes must be validated by the backend.</p></div>
+  </section>
+
+  <section class="page" id="page-community">
+    <div class="page-title"><h1>Network <span class="gradient">community.</span></h1><p>Connect with the Network Krypto community.</p></div>
+    <div class="grid-2">
+      <div class="project-card"><div class="project-top"><span class="project-icon">◉</span><span class="tag">DISCORD</span></div><h3>Community Discord</h3><p>Get updates, share your work and connect with other creators.</p><a class="secondary" style="display:inline-block;margin-top:15px" href="https://discord.gg/uasa7QZxq" target="_blank" rel="noopener noreferrer">Open Discord ↗</a></div>
+      <div class="project-card"><div class="project-top"><span class="project-icon">◇</span><span class="tag">SUPPORT</span></div><h3>Network support</h3><p>Find help and information about the Network Krypto project.</p><a class="secondary" style="display:inline-block;margin-top:15px" href="https://doughkinglv2300-cell.github.io/krypto-legal/" target="_blank" rel="noopener noreferrer">Legal and information ↗</a></div>
+    </div>
+  </section>
+
+  <div class="footer">NETWORK KRYPTO AI · Built for creators and developers</div>
+</main>
+</div>
+
+<div class="planet-wrap" aria-hidden="true"><div class="planet"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="brand" style="margin-bottom:22px"><span class="brand-mark">✦</span><span class="brand-name">NETWORK <span>KRYPTO</span> AI</span></div>
+    <h2 id="authTitle">Welcome back.</h2>
+    <p id="authSubtitle">Sign in to continue to your development command center.</p>
+    <div class="auth-tabs"><button class="active" data-auth-tab="login">Sign in</button><button data-auth-tab="register">Create account</button></div>
+    <div class="auth-error" id="authError"></div>
+    <form id="authForm">
+      <div class="field hidden" id="nameField"><label for="authName">DISPLAY NAME</label><input id="authName" autocomplete="name" maxlength="40" placeholder="Your name"></div>
+      <div class="field"><label for="authEmail">EMAIL ADDRESS</label><input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+      <div class="field"><label for="authPassword">PASSWORD</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters"></div>
+      <button class="primary" id="authSubmit" type="submit" style="width:100%">Sign in</button>
+    </form>
+    <div class="divider-text">OR CONTINUE WITH</div>
+    <button class="secondary google-btn" id="googleSignIn">◎ Continue with Google</button>
+    <button class="secondary google-btn" id="forgotPassword" style="border:0;background:transparent">Forgot password?</button>
+    <div class="auth-foot">By continuing, you agree to use the service responsibly. Your account and wallet are protected by server-side rules.</div>
+  </div>
+</div>
+
+<script type="module">
+import { auth, googleProvider } from "./firebase.js";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut,
+  updateProfile,
+  sendEmailVerification
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+const API_URL = "https://network-krypto-ai.taybatouch.workers.dev/chat";
+const $ = (id) => document.getElementById(id);
+const state = {
+  user: null,
+  authMode: "login",
+  currentChatId: null,
+  chats: [],
+  sending: false,
+  workspaceVisited: false
+};
+
+const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, ch => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[ch]));
+
+function toast(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove("show"), 3000);
+}
+
+function setAuthError(message) {
+  const el = $("authError");
+  el.textContent = message;
+  el.classList.toggle("show", Boolean(message));
+}
+
+function showAuth(mode = "login") {
+  setAuthMode(mode);
+  $("authScreen").classList.add("show");
+  $("profileDropdown").classList.remove("show");
+}
+
+function hideAuth() {
+  $("authScreen").classList.remove("show");
+  setAuthError("");
+}
+
+function setAuthMode(mode) {
+  state.authMode = mode;
+  const register = mode === "register";
+  $("authTitle").textContent = register ? "Create your account." : "Welcome back.";
+  $("authSubtitle").textContent = register ? "Create an account to start using Network Krypto AI." : "Sign in to continue to your development command center.";
+  $("nameField").classList.toggle("hidden", !register);
+  $("authSubmit").textContent = register ? "Create account" : "Sign in";
+  $("forgotPassword").classList.toggle("hidden", register);
+  document.querySelectorAll("[data-auth-tab]").forEach(btn => btn.classList.toggle("active", btn.dataset.authTab === mode));
+  $("authPassword").autocomplete = register ? "new-password" : "current-password";
+  setAuthError("");
+}
+
+function navigate(page) {
+  const valid = ["studio","workspace","quests","credits","chat","history","profile","settings","community"];
+  if (!valid.includes(page)) page = "studio";
+  document.querySelectorAll(".page").forEach(el => el.classList.toggle("active", el.id === `page-${page}`));
+  document.querySelectorAll("[data-page]").forEach(el => el.classList.toggle("active", el.dataset.page === page));
+  $("profileDropdown").classList.remove("show");
+  $("mainNav").classList.remove("open");
+  if (page === "workspace") {
+    state.workspaceVisited = true;
+    $("workspaceQuestStatus").textContent = "Visited in this session.";
+    renderRecentSessions();
+  }
+  if (page === "history") renderHistory();
+  if (page === "chat") renderChat();
+  if (page === "credits") refreshWallet();
+  if (page === "quests") updateQuestStatus();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function getLocalChats() {
+  try {
+    const key = state.user ? `nka_chats_${state.user.uid}` : "nka_chats_guest";
+    const parsed = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+function saveChats() {
+  try {
+    const key = state.user ? `nka_chats_${state.user.uid}` : "nka_chats_guest";
+    localStorage.setItem(key, JSON.stringify(state.chats.slice(0,40)));
+  } catch { toast("Could not save chat history on this device."); }
+  updateSessionCount();
+}
+
+function updateSessionCount() {
+  $("sessionCount").textContent = String(state.chats.length);
+}
+
+function newChat() {
+  const chat = {
+    id: `${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+    title: "New conversation",
+    updatedAt: Date.now(),
+    messages: []
+  };
+  state.chats.unshift(chat);
+  state.currentChatId = chat.id;
+  saveChats();
+  renderChat();
+  navigate("chat");
+  $("chatInput").focus();
+}
+
+function currentChat() {
+  return state.chats.find(chat => chat.id === state.currentChatId) || null;
+}
+
+function ensureChat() {
+  let chat = currentChat();
+  if (!chat) {
+    chat = {
+      id: `${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+      title: "New conversation",
+      updatedAt: Date.now(),
+      messages: []
+    };
+    state.chats.unshift(chat);
+    state.currentChatId = chat.id;
+  }
+  return chat;
+}
+
+function renderChat() {
+  const list = $("chatList");
+  list.innerHTML = "";
+  if (!state.chats.length) {
+    list.innerHTML = '<div class="muted small">Your conversations will appear here.</div>';
+  } else {
+    state.chats.slice(0,20).forEach(chat => {
+      const button = document.createElement("button");
+      button.className = `chat-item${chat.id === state.currentChatId ? " active" : ""}`;
+      button.textContent = chat.title || "Conversation";
+      button.title = chat.title || "Conversation";
+      button.addEventListener("click", () => {
+        state.currentChatId = chat.id;
+        renderChat();
+      });
+      list.appendChild(button);
+    });
+  }
+  const messages = $("chatMessages");
+  const chat = currentChat();
+  if (!chat || !chat.messages.length) {
+    messages.innerHTML = '<div class="empty-state"><div class="symbol">✦</div><strong>Welcome to Network Krypto AI</strong><br>Start with a question, a bug, or an idea you want to build.</div>';
+  } else {
+    messages.innerHTML = chat.messages.map(message => `
+      <div class="message ${message.role === "user" ? "user" : "assistant"}">
+        <span class="role">${message.role === "user" ? "YOU" : "NETWORK KRYPTO AI"}</span>${escapeHTML(message.content)}
+      </div>`).join("");
+  }
+  messages.scrollTop = messages.scrollHeight;
+  renderChatListOnly();
+}
+
+function renderChatListOnly() {
+  const list = $("chatList");
+  if (!state.chats.length) return;
+  list.innerHTML = "";
+  state.chats.slice(0,20).forEach(chat => {
+    const button = document.createElement("button");
+    button.className = `chat-item${chat.id === state.currentChatId ? " active" : ""}`;
+    button.textContent = chat.title || "Conversation";
+    button.addEventListener("click", () => {
+      state.currentChatId = chat.id;
+      renderChat();
+    });
+    list.appendChild(button);
+  });
+}
+
+function renderHistory() {
+  const target = $("historyList");
+  if (!state.chats.length) {
+    target.innerHTML = '<div class="empty-state">No saved conversations yet. Start a conversation in Studio.</div>';
+    return;
+  }
+  target.innerHTML = state.chats.map(chat => `
+    <div class="setting-row">
+      <div><strong>${escapeHTML(chat.title || "Conversation")}</strong><small>${new Date(chat.updatedAt || Date.now()).toLocaleString()} · ${(chat.messages || []).length} messages</small></div>
+      <button class="secondary" data-open-chat="${escapeHTML(chat.id)}">Open</button>
+    </div>`).join("");
+  target.querySelectorAll("[data-open-chat]").forEach(button => button.addEventListener("click", () => {
+    state.currentChatId = button.dataset.openChat;
+    navigate("chat");
+  }));
+}
+
+function renderRecentSessions() {
+  const target = $("recentSessions");
+  if (!state.chats.length) {
+    target.innerHTML = '<div class="empty-state">No sessions yet. Start a conversation in Studio.</div>';
+    return;
+  }
+  target.innerHTML = state.chats.slice(0,4).map(chat => `
+    <div class="setting-row">
+      <div><strong>${escapeHTML(chat.title || "Conversation")}</strong><small>${(chat.messages || []).length} messages · ${new Date(chat.updatedAt || Date.now()).toLocaleDateString()}</small></div>
+      <button class="secondary" data-open-recent="${escapeHTML(chat.id)}">Continue →</button>
+    </div>`).join("");
+  target.querySelectorAll("[data-open-recent]").forEach(button => button.addEventListener("click", () => {
+    state.currentChatId = button.dataset.openRecent;
+    navigate("chat");
+  }));
+}
+
+function setSending(value) {
+  state.sending = value;
+  $("sendMessage").disabled = value;
+  $("sendMessage").textContent = value ? "…" : "↑";
+}
+
+function extractAssistantText(data) {
+  if (typeof data === "string") return data;
+  if (!data || typeof data !== "object") return "";
+  return data.reply || data.response || data.message || data.output || data.text ||
+    data.choices?.[0]?.message?.content || data.result?.response || "";
+}
+
+async function sendChatMessage(text) {
+  const clean = String(text || "").trim();
+  if (!clean || state.sending) return;
+  const chat = ensureChat();
+  chat.messages.push({role:"user",content:clean});
+  if (chat.title === "New conversation") chat.title = clean.slice(0,48) + (clean.length > 48 ? "…" : "");
+  chat.updatedAt = Date.now();
+  saveChats();
+  $("chatInput").value = "";
+  renderChat();
+  setSending(true);
+  const placeholder = document.createElement("div");
+  placeholder.className = "message assistant";
+  placeholder.id = "typingIndicator";
+  placeholder.innerHTML = '<span class="role">NETWORK KRYPTO AI</span>Thinking <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>';
+  $("chatMessages").appendChild(placeholder);
+  $("chatMessages").scrollTop = $("chatMessages").scrollHeight;
+
+  try {
+    const payload = {
+      message: clean,
+      userId: state.user?.uid || null,
+      uid: state.user?.uid || null,
+      email: state.user?.email || null,
+      history: chat.messages.slice(-12).map(item => ({role:item.role,content:item.content}))
+    };
+    const response = await fetch(API_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    });
+    const raw = await response.text();
+    let data;
+    try { data = JSON.parse(raw); } catch { data = raw; }
+    if (!response.ok) {
+      const detail = typeof data === "object" ? (data.error || data.message) : data;
+      throw new Error(detail || `Request failed (${response.status})`);
+    }
+    const answer = extractAssistantText(data);
+    if (!answer) throw new Error("The AI endpoint returned an empty response. Check the Worker response format.");
+    chat.messages.push({role:"assistant",content:answer});
+    chat.updatedAt = Date.now();
+    if (typeof data === "object" && Number.isFinite(Number(data.credits))) updateCreditDisplay(Number(data.credits));
+    saveChats();
+    $("chatQuestStatus").textContent = "First conversation started.";
+  } catch (error) {
+    chat.messages.push({role:"assistant",content:`I couldn't reach the AI service: ${error.message}\n\nPlease check the Worker endpoint, its request format, and its server logs.`});
+    chat.updatedAt = Date.now();
+    saveChats();
+  } finally {
+    setSending(false);
+    renderChat();
+  }
+}
+
+function updateCreditDisplay(balance) {
+  if (!Number.isFinite(balance)) return;
+  const value = Math.max(0, balance);
+  $("topCredits").textContent = value.toLocaleString();
+  $("walletBalance").textContent = value.toLocaleString();
+  $("questCredits").textContent = value.toLocaleString();
+  $("walletStatus").textContent = "Balance returned by the AI service.";
+}
+
+async function refreshWallet() {
+  if (!state.user) {
+    $("walletBalance").textContent = "—";
+    $("walletStatus").textContent = "Sign in to load your account balance.";
+    $("topCredits").textContent = "—";
+    $("questCredits").textContent = "—";
+    return;
+  }
+  $("walletStatus").textContent = "Wallet balance is managed by the secure backend.";
+  // No undocumented wallet endpoint is called and no client-side balance is fabricated.
+}
+
+function updateQuestStatus() {
+  const user = state.user;
+  $("profileQuestStatus").textContent = user ? (user.displayName ? "Profile name is set." : "Add a display name in Profile.") : "Sign in to check this quest.";
+  $("emailQuestStatus").textContent = user ? (user.emailVerified ? "Email verified." : "Email verification is still pending.") : "Sign in to check this quest.";
+  $("chatQuestStatus").textContent = state.chats.some(chat => chat.messages?.length) ? "A conversation has been started." : "Start a chat to update this status.";
+  $("workspaceQuestStatus").textContent = state.workspaceVisited ? "Visited in this session." : "Not visited in this session.";
+}
+
+function updateUserUI(user) {
+  state.user = user || null;
+  state.chats = getLocalChats();
+  state.currentChatId = state.chats[0]?.id || null;
+  const name = user?.displayName || user?.email?.split("@")[0] || "Guest";
+  const email = user?.email || "Not signed in";
+  $("menuName").textContent = name;
+  $("menuEmail").textContent = email;
+  $("profileDisplayName").textContent = name;
+  $("profileEmail").textContent = email;
+  $("profileProvider").textContent = user ? (user.emailVerified ? "✓ Verified account" : "Account active") : "No active account";
+  $("displayNameInput").value = user?.displayName || "";
+  $("emailInput").value = user?.email || "";
+  $("workspaceAccount").textContent = user ? "Active" : "Guest";
+  $("settingsAuthStatus").textContent = user ? `Signed in as ${email}` : "You are browsing as a guest.";
+  $("settingsAuthButton").textContent = user ? "Account active" : "Sign in";
+  $("settingsVerifyStatus").textContent = user ? (user.emailVerified ? "Your email is verified." : "Your email is not verified yet.") : "Sign in to view verification status.";
+  $("avatarButton").innerHTML = user?.photoURL ? `<img src="${escapeHTML(user.photoURL)}" alt="">` : escapeHTML((name[0] || "?").toUpperCase());
+  $("bigAvatar").innerHTML = user?.photoURL ? `<img src="${escapeHTML(user.photoURL)}" alt="Profile avatar">` : escapeHTML((name[0] || "?").toUpperCase());
+  $("menuAuthAction").textContent = user ? "↗ Sign out" : "↗ Sign in / Create account";
+  $("welcomeLine").textContent = user ? `Good to see you, ${name}. Your AI development command center is ready.` : "One intelligent workspace for Minecraft, Discord bots, coding, plugins and creative projects.";
+  $("topCredits").textContent = "—";
+  $("walletBalance").textContent = "—";
+  $("questCredits").textContent = "—";
+  updateSessionCount();
+  renderChat();
+  renderHistory();
+  renderRecentSessions();
+  updateQuestStatus();
+  if (user) refreshWallet();
+}
+
+function friendlyAuthError(error) {
+  const code = error?.code || "";
+  const map = {
+    "auth/email-already-in-use":"An account already exists with this email.",
+    "auth/invalid-email":"Enter a valid email address.",
+    "auth/weak-password":"Choose a stronger password with at least 6 characters.",
+    "auth/invalid-credential":"Email or password is incorrect.",
+    "auth/user-not-found":"No account was found for this email.",
+    "auth/wrong-password":"Email or password is incorrect.",
+    "auth/popup-closed-by-user":"The Google sign-in window was closed.",
+    "auth/popup-blocked":"Your browser blocked the sign-in popup. Allow popups and try again.",
+    "auth/network-request-failed":"Network error. Check your internet connection."
+  };
+  return map[code] || error?.message || "Authentication failed. Please try again.";
+}
+
+$("authForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  setAuthError("");
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+  const name = $("authName").value.trim();
+  const button = $("authSubmit");
+  button.disabled = true;
+  try {
+    if (state.authMode === "register") {
+      const credential = await createUserWithEmailAndPassword(auth,email,password);
+      if (name) await updateProfile(credential.user,{displayName:name});
+      // Welcome credits are granted once by the trusted backend, never by this browser.
+      try { await sendEmailVerification(credential.user); } catch {}
+      toast("Account created. Welcome to Network Krypto AI!");
+      hideAuth();
+    } else {
+      await signInWithEmailAndPassword(auth,email,password);
+      toast("Signed in successfully.");
+      hideAuth();
+    }
+  } catch (error) {
+    setAuthError(friendlyAuthError(error));
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$("googleSignIn").addEventListener("click", async () => {
+  setAuthError("");
+  try {
+    await signInWithPopup(auth,googleProvider);
+    hideAuth();
+    toast("Google sign-in successful.");
+  } catch (error) {
+    setAuthError(friendlyAuthError(error));
+  }
+});
+
+$("forgotPassword").addEventListener("click", async () => {
+  const email = $("authEmail").value.trim();
+  if (!email) return setAuthError("Enter your email address first.");
+  try {
+    await sendPasswordResetEmail(auth,email);
+    toast("Password reset email sent. Check your inbox.");
+    setAuthError("");
+  } catch (error) { setAuthError(friendlyAuthError(error)); }
+});
+
+$("googleSignIn").disabled = !googleProvider;
+$("avatarButton").addEventListener("click", () => $("profileDropdown").classList.toggle("show"));
+$("mobileMenu").addEventListener("click", () => $("mainNav").classList.toggle("open"));
+$("menuAuthAction").addEventListener("click", async () => {
+  $("profileDropdown").classList.remove("show");
+  if (state.user) {
+    try { await signOut(auth); toast("Signed out."); } catch (error) { toast(error.message); }
+  } else showAuth("login");
+});
+$("settingsAuthButton").addEventListener("click", () => { if (!state.user) showAuth("login"); });
+$("signOutButton").addEventListener("click", async () => {
+  if (!state.user) return showAuth("login");
+  try { await signOut(auth); toast("Signed out successfully."); } catch (error) { toast(error.message); }
+});
+$("settingsVerifyButton").addEventListener("click", async () => {
+  if (!state.user) return showAuth("login");
+  if (state.user.emailVerified) return toast("Your email is already verified.");
+  try { await sendEmailVerification(state.user); toast("Verification email sent."); } catch (error) { toast(friendlyAuthError(error)); }
+});
+$("verifyEmail").addEventListener("click", async () => {
+  if (!state.user) return showAuth("login");
+  if (state.user.emailVerified) return toast("Your email is already verified.");
+  try { await sendEmailVerification(state.user); toast("Verification email sent."); } catch (error) { toast(friendlyAuthError(error)); }
+});
+$("resetPassword").addEventListener("click", async () => {
+  if (!state.user?.email) return showAuth("login");
+  try { await sendPasswordResetEmail(auth,state.user.email); toast("Password reset email sent."); } catch (error) { toast(friendlyAuthError(error)); }
+});
+$("saveProfile").addEventListener("click", async () => {
+  if (!state.user) return showAuth("login");
+  const displayName = $("displayNameInput").value.trim();
+  if (!displayName) return toast("Enter a display name.");
+  try {
+    await updateProfile(state.user,{displayName});
+    await state.user.reload();
+    updateUserUI(auth.currentUser);
+    toast("Profile updated.");
+  } catch (error) { toast(friendlyAuthError(error)); }
+});
+$("refreshWallet").addEventListener("click", refreshWallet);
+$("newChat").addEventListener("click",newChat);
+$("workspaceNewChat").addEventListener("click",newChat);
+$("sendMessage").addEventListener("click",() => sendChatMessage($("chatInput").value));
+$("chatInput").addEventListener("keydown",event => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendChatMessage($("chatInput").value);
+  }
+});
+$("startPrompt").addEventListener("click",() => {
+  const prompt = $("promptInput").value.trim();
+  if (!prompt) return toast("Write a prompt first.");
+  ensureChat();
+  navigate("chat");
+  sendChatMessage(prompt);
+  $("promptInput").value = "";
+});
+$("clearPrompt").addEventListener("click",() => { $("promptInput").value = ""; $("promptInput").focus(); });
+document.querySelectorAll("[data-prompt]").forEach(button => button.addEventListener("click",() => {
+  const prompt = button.dataset.prompt;
+  ensureChat();
+  navigate("chat");
+  sendChatMessage(prompt);
+}));
+document.querySelectorAll("[data-page]").forEach(button => button.addEventListener("click",() => navigate(button.dataset.page)));
+document.querySelectorAll("[data-page-link]").forEach(link => link.addEventListener("click",event => {event.preventDefault();navigate(link.dataset.pageLink);}));
+document.querySelectorAll("[data-auth-tab]").forEach(button => button.addEventListener("click",() => setAuthMode(button.dataset.authTab)));
+$("authScreen").addEventListener("click",event => { if (event.target === $("authScreen")) hideAuth(); });
+document.addEventListener("click",event => {
+  if (!$("profileDropdown").contains(event.target) && !$("avatarButton").contains(event.target)) $("profileDropdown").classList.remove("show");
+});
+
+onAuthStateChanged(auth,user => {
+  updateUserUI(user);
+});
+
+// Refresh the verification flag when the user returns to this tab.
+document.addEventListener("visibilitychange",async () => {
+  if (!document.hidden && auth.currentUser) {
+    try { await auth.currentUser.reload(); updateUserUI(auth.currentUser); } catch {}
+  }
+});
+
+state.chats = getLocalChats();
+state.currentChatId = state.chats[0]?.id || null;
+updateSessionCount();
+renderChat();
+</script>
+</body>
+</html>
